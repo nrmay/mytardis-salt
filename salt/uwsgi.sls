@@ -1,3 +1,5 @@
 uwsgi:
-  pkg:
-    - installed
+  pkg.installed:
+    - names:
+        - uwsgi
+        - uwsgi-plugin-python
