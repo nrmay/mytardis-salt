@@ -30,11 +30,19 @@ mytardis-git:
 requirements:
   pkg.installed:
     - names:
+{% if grains['os'] == "Ubuntu" %}
       - python-dev
       - libsasl2-dev
       - libxml2-dev
       - libxslt1-dev
       - libmagickwand4
+{% elif grains['os'] == "CentOS" %}
+      - python-devel
+      - libgsasl-devel
+      - libxml2-devel
+      - libxslt-devel
+      - ImageMagick
+{% endif %}
 
 buildout-cfg:
   file.managed:
@@ -91,10 +99,28 @@ bootstrap:
         - cmd.run: postgresql
 
 # nginx configuration for mytardis. removes default nginx site
+{% if grains['os'] == "Ubuntu" %}
 /etc/nginx/sites-enabled/default:
   file.absent: []
 
+/etc/nginx/sites-enabled:
+  file.directory: []
+
+/etc/nginx/sites-enabled/mytardis.conf:
+  file.symlink:
+    - target: /etc/nginx/sites-available/mytardis.conf
+    - require:
+        - file: /etc/nginx/sites-enabled
+{% elif grains['os'] == "CentOS" %}
+/etc/nginx/conf.d/default.conf:
+  file.absent: []
+{% endif %}
+
+{% if grains['os'] == "Ubuntu" %}
 /etc/nginx/sites-available/mytardis.conf:
+{% elif grains['os'] == "CentOS" %}
+/etc/nginx/conf.d/mytardis.conf:
+{% endif %}
   file.managed:
     - source: salt://templates/nginx_site.conf
     - template: jinja
@@ -103,14 +129,17 @@ bootstrap:
     - require:
       - pkg.installed: nginx
 
-/etc/nginx/sites-enabled/mytardis.conf:
+service nginx restart:
   cmd.run:
-    - name: service nginx restart
     - require:
+{% if grains['os'] == "Ubuntu" %}
       - file.symlink: /etc/nginx/sites-available/mytardis.conf
       - file.absent: /etc/nginx/sites-enabled/default
-  file.symlink:
-    - target: /etc/nginx/sites-available/mytardis.conf
+{% elif grains['os'] == "CentOS" %}
+      - file: /etc/nginx/conf.d/mytardis.conf
+      - file.absent: /etc/nginx/conf.d/default.conf
+{% endif %}
+
 
 # uwsgi configuration
 {{ mytardis_inst_dir }}/wsgi.py:
@@ -120,6 +149,7 @@ bootstrap:
     - require: 
         - cmd.run: bootstrap
 
+{% if grains['os'] == "Ubuntu" %}
 /etc/uwsgi/apps-available/mytardis.xml:
   file.symlink:
     - target: {{ mytardis_inst_dir }}/parts/uwsgi/uwsgi.xml
@@ -137,7 +167,35 @@ service uwsgi restart:
   cmd.run:
     - require:
         - file: /etc/uwsgi/apps-enabled/mytardis.xml
+{% elif grains['os'] == "CentOS" %}
+supervisor:
+  pkg.installed: []
 
+/var/run/uwsgi/app/mytardis/socket:
+  file.touch:
+    - owner: mytardis
+    - group: nginx
+    - mode: 660
+    - makedirs: True
+
+/etc/supervisord.conf:
+  file.managed:
+    - source: salt://templates/supervisord.conf
+    - template: jinja
+    - context:
+        mytardis_dir: {{ mytardis_inst_dir }}
+    - require:
+        - pkg: supervisor
+
+service supervisord restart:
+  cmd.run:
+    - require:
+        - file: /etc/supervisord.conf
+        - file: /var/run/uwsgi/app/mytardis/socket
+        - file: {{ mytardis_inst_dir }}/wsgi.py
+{% endif %}
+
+{% if grains['os'] == "Ubuntu" %}
 # fix for buggy Ubuntu 12.04 uwsgi
 /usr/bin/uwsgi:
   file.rename: # managed files only work with off-client sources
@@ -157,3 +215,4 @@ service uwsgi stop:
     - require:
         - cmd.run: service uwsgi restart
 # end fix
+{% endif %}

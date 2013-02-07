@@ -1,18 +1,20 @@
-pillar_roots:
-  base:
-    - /srv/pillar
+#pillar_roots:
+#  base:
+#    - /srv/pillar
 
 base:
   '*':
-    - uwsgi
-    - networking
+#    - uwsgi
 #    - utils
+    - mytardis
+
+  'os:Ubuntu':
+    - match: grain
+    - uwsgi
 
   'master-host':
     - nginx
-    - mytardis
 
   'roles:db':
     - match: grain
     - postgresql
-
