@@ -3,10 +3,8 @@ postgresql:
     - names:
     {% if grains['os'] == 'CentOS' %}
       - postgresql-server
-      - postgresql-devel
     {% elif grains['os'] == 'Ubuntu' %}
       - postgresql
-      - postgresql-server-dev-all
     {% endif %}
 
 {% if grains['os'] == 'Ubuntu' %}
