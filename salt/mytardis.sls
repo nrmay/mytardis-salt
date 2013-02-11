@@ -72,11 +72,12 @@ settings.py:
 # run shell script that builds mytardis with buildout and populates the db
 bootstrap:
   cmd.run:
-    - name: python bootstrap.py
+    - name: python bootstrap.py -v 1.7.0 -c buildout-salt.cfg
     - cwd: {{ mytardis_inst_dir }}
     - user: mytardis
     - unless: ls {{ mytardis_inst_dir }}/bin/buildout
     - require:
+        - file: buildout-cfg
         - git: mytardis-git
         - pkg: requirements
 
