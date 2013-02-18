@@ -8,6 +8,12 @@ mytardis:
     - shell: /bin/bash
     - home: {{ pillar['mytardis_base_dir'] }}
 
+{{ pillar['mytardis_base_dir'] }}:
+  file.directory:
+    - mode: 755
+    - require:
+      - user: mytardis
+
 # install git
 {{ pillar['git'] }}:
   pkg:
@@ -35,7 +41,11 @@ requirements:
       - libsasl2-dev
       - libxml2-dev
       - libxslt1-dev
+{% if grains['osrelease'] == "12.10" %}
+      - libmagickwand5
+{% else %}
       - libmagickwand4
+{% endif %}
       - postgresql-server-dev-all
 {% elif grains['os'] == "CentOS" %}
       - python-devel
@@ -46,6 +56,16 @@ requirements:
       - postgresql-devel
 {% endif %}
 
+{% if grains['os'] == "CentOS disabled" %}
+# only available in newest salt version
+devtools:
+  module.run:
+    - name: yumpkg.group_install
+    - m_name: 'Development Tools'
+    - require_in:
+      - cmd: buildout
+{% endif %}
+
 buildout-cfg:
   file.managed:
     - name: {{ mytardis_inst_dir }}/buildout-salt.cfg
@@ -53,7 +73,7 @@ buildout-cfg:
     - template: jinja
     - context:
         mytardis_dir: {{ mytardis_inst_dir }}
-    - owner: mytardis
+    - user: mytardis
     - require:
         - user: mytardis
     - watch:
@@ -64,7 +84,7 @@ settings.py:
   file.managed:
     - name: {{ mytardis_inst_dir }}/tardis/settings.py
     - source: salt://templates/settings.py
-    - owner: mytardis
+    - user: mytardis
     - require:
         - git: mytardis-git
         - user: mytardis
@@ -116,7 +136,7 @@ bin/django collectstatic -l --noinput:
 # common uwsgi configuration
 {{ mytardis_inst_dir }}/wsgi.py:
   file.managed:
-    - owner: mytardis
+    - user: mytardis
     - source: salt://templates/wsgi.py
     - require: 
         - cmd.run: bootstrap

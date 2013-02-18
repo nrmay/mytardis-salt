@@ -10,7 +10,8 @@ base:
     - match: grain
     - uwsgi-centos
 
-  'master-host':
+  'roles:master-host':
+    - match: grain
     - nginx
 
   'roles:db':

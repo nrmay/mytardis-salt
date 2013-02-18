@@ -6,7 +6,7 @@ supervisor:
 
 /var/run/uwsgi/app/mytardis/socket:
   file.touch:
-    - owner: mytardis
+    - user: mytardis
     - group: nginx
     - mode: 660
     - makedirs: True
