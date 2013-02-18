@@ -4,6 +4,7 @@
 download-example-files:
   cmd.run:
     - name: wget https://dl.dropbox.com/u/172498/code/store.tar.gz
+    - unless: ls store.tar.gz
     - cwd: {{ mytardis_inst_dir }}
     - user: mytardis
     - require:
@@ -20,6 +21,7 @@ tar -xvzf store.tar.gz -C var/store:
 download-example-data:
   cmd.run:
     - name: wget https://dl.dropbox.com/u/172498/code/exampledata.json
+    - unless: ls exampledata.json
     - cwd: {{ mytardis_inst_dir }}
     - user: mytardis
     - require:
