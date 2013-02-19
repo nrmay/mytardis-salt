@@ -1,7 +1,7 @@
 postgresql:
   pkg.installed:
     - names:
-    {% if grains['os'] == 'CentOS' %}
+    {% if grains['os'] == 'CentOS' or grains['os'] == "RedHat" %}
       - postgresql-server
     {% elif grains['os'] == 'Ubuntu' %}
       - postgresql
@@ -31,7 +31,7 @@ postgresql:
       - file: postgresql
 {% endif %}
 
-{% if grains['os'] == 'CentOS' %}
+{% if grains['os'] == 'CentOS' or grains['os'] == "RedHat" %}
   cmd.run:
     - name: service postgresql initdb
     - unless: ls /var/lib/pgsql/data/base

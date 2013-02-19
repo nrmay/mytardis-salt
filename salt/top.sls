@@ -10,6 +10,10 @@ base:
     - match: grain
     - uwsgi-centos
 
+  'os:RedHat':
+    - match: grain
+    - uwsgi-centos
+
   'roles:master-host':
     - match: grain
     - nginx

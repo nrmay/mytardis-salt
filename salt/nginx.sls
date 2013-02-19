@@ -24,7 +24,7 @@ nginx:
     - require:
         - file: /etc/nginx/sites-enabled
         - file: /etc/nginx/sites-available/mytardis.conf
-{% elif grains['os'] == "CentOS" %}
+{% elif grains['os'] == "CentOS" or grains['os'] == "RedHat" %}
 /etc/nginx/conf.d/default.conf:
   file.absent:
     - require:
@@ -33,7 +33,7 @@ nginx:
 
 {% if grains['os'] == "Ubuntu" %}
 /etc/nginx/sites-available/mytardis.conf:
-{% elif grains['os'] == "CentOS" %}
+{% elif grains['os'] == "CentOS" or grains['os'] == "RedHat" %}
 /etc/nginx/conf.d/mytardis.conf:
 {% endif %}
   file.managed:
@@ -50,13 +50,13 @@ service nginx restart:
 {% if grains['os'] == "Ubuntu" %}
       - file.symlink: /etc/nginx/sites-enabled/mytardis.conf
       - file.absent: /etc/nginx/sites-enabled/default
-{% elif grains['os'] == "CentOS" %}
+{% elif grains['os'] == "CentOS" or grains['os'] == "RedHat" %}
       - file: /etc/nginx/conf.d/mytardis.conf
       - file.absent: /etc/nginx/conf.d/default.conf
 {% endif %}
 
 # open firewall
-{% if grains['os'] == "CentOS" %}
+{% if grains['os'] == "CentOS" or grains['os'] == "RedHat" %}
 lokkit -s http -s https:
   cmd.run: []
 {% endif %}

@@ -47,7 +47,7 @@ requirements:
       - libmagickwand4
 {% endif %}
       - postgresql-server-dev-all
-{% elif grains['os'] == "CentOS" %}
+{% elif grains['os'] == "CentOS" or grains['os'] == "RedHat" %}
       - python-devel
       - libgsasl-devel
       - libxml2-devel
