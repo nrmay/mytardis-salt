@@ -56,11 +56,11 @@ requirements:
       - postgresql-devel
 {% endif %}
 
-{% if grains['os'] == "CentOS disabled" %}
+{% if grains['os'] == "CentOS" or grains['os'] == "RedHat" %}
 # only available in newest salt version
 devtools:
   module.run:
-    - name: yumpkg.group_install
+    - name: pkg.group_install
     - m_name: 'Development Tools'
     - require_in:
       - cmd: buildout
