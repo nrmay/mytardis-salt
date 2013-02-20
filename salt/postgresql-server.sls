@@ -1,4 +1,4 @@
-postgresql:
+postgresql-server:
   pkg.installed:
     - names:
     {% if grains['os'] == 'CentOS' or grains['os'] == "RedHat" %}

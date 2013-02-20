@@ -111,7 +111,7 @@ django-sync-migrate:
         - git: mytardis-git
         - cmd: buildout
     - require:
-        - postgres_database: mytardis
+        - postgres_database: {{ pillar['postgres-db'] }}
 
 buildout:
   cmd.run:

@@ -18,9 +18,13 @@ base:
     - match: grain
     - nginx
 
-  'roles:db':
+  'roles:db-server':
     - match: grain
-    - postgresql
+    - postgresql-server
+
+  'roles:db-client':
+    - match: grain
+    - postgresql-client
 
   'roles:exampledata':
     - match: grain
