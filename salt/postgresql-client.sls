@@ -1,13 +1,3 @@
-postgresql-client:
-  postgres_user:
-    - present
-    - name: {{ pillar['postgres.user'] }}
-    - password: {{ pillar['postgres.pass'] }}
-    - host: {{ pillar['postgres.host'] }}
-{% if 'db-server' in grains['roles'] %}
-    - runas: postgres
-{% endif %}
-
 postgres.db_exists:
   module.run:
     - m_name: {{ pillar['postgres.db'] }}
@@ -17,3 +7,14 @@ postgres.db_exists:
 #    - owner: {{ pillar['postgres.user'] }}
     - require:
       - postgres_user.present: {{ pillar['postgres.user'] }}
+
+{% if pillar['postgres.host'] == "localhost" %}
+{{ pillar['postgres.user'] }}:
+  postgres_user:
+    - present
+    - password: {{ pillar['postgres.pass'] }}
+    - host: {{ pillar['postgres.host'] }}
+{% if 'db-server' in grains['roles'] %}
+    - runas: postgres
+{% endif %}
+{% endif %}
