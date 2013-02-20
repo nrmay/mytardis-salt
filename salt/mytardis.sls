@@ -115,7 +115,7 @@ django-sync-migrate:
         - module: postgres.db_exists
 
 buildout:
-  cmd.run:
+  cmd.watch:
     - name: bin/buildout -c buildout-salt.cfg
     - cwd: {{ mytardis_inst_dir }}
     - user: mytardis

@@ -8,9 +8,8 @@ postgresql-client:
     - runas: postgres
 {% endif %}
 
+postgres.db_exists:
   module.run:
-    - name: postgres.db_exists
-    - present
     - m_name: {{ pillar['postgres.db'] }}
 {% if 'db-server' in grains['roles'] %}
 #    - runas: postgres
