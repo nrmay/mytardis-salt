@@ -3,10 +3,10 @@ from tardis.settings_changeme import *
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'mytardis',
-        'USER': 'mytardis',
-        'PASSWORD': 'mytardis', # unused with ident auth
-        'HOST': '',
+        'NAME': '{{ pillar['postgres-db'] }}',
+        'USER': '{{ pillar['postgres-user'] }}',
+        'PASSWORD': '{{ pillar['postgres-password'] }}',
+        'HOST': '{{ pillar['postgres-host'] }}',
         'PORT': '',
     }
 }

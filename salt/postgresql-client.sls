@@ -11,7 +11,9 @@ postgresql-client:
   postgres_database:
     - present
     - name: {{ pillar['postgres-db'] }}
+{% if 'db-server' in grains['roles'] %}
     - runas: postgres
+{% endif %}
     - owner: {{ pillar['postgres-user'] }}
     - require:
       - postgres_user.present: {{ pillar['postgres-user'] }}

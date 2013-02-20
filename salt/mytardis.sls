@@ -84,6 +84,7 @@ settings.py:
   file.managed:
     - name: {{ mytardis_inst_dir }}/tardis/settings.py
     - source: salt://templates/settings.py
+    - template: jinja
     - user: mytardis
     - require:
         - git: mytardis-git
