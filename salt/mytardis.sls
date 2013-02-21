@@ -77,6 +77,7 @@ buildout-cfg:
     - user: {{ pillar['mytardis_user'] }}
     - require:
         - user: {{ pillar['mytardis_user'] }}
+        - file.directory: {{ pillar['mytardis_user'] }}
     - watch:
         - git: mytardis-git
 
@@ -102,6 +103,7 @@ bootstrap:
         - file: buildout-cfg
         - git: mytardis-git
         - pkg: requirements
+        - file.directory: {{ pillar['mytardis_user'] }}
 
 django-sync-migrate:
   cmd.run:
