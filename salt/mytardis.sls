@@ -31,6 +31,7 @@ mytardis-git:
     - runas: {{ pillar['mytardis_user'] }}
     - require:
       - user: {{ pillar['mytardis_user'] }}
+      - file.directory: {{ pillar['mytardis_base_dir'] }}
       - pkg: {{ pillar['git'] }}
 
 # install required packages for buildout. This is Ubuntu only at the moment
@@ -77,7 +78,7 @@ buildout-cfg:
     - user: {{ pillar['mytardis_user'] }}
     - require:
         - user: {{ pillar['mytardis_user'] }}
-        - file.directory: {{ pillar['mytardis_user'] }}
+        - file.directory: {{ pillar['mytardis_base_dir'] }}
     - watch:
         - git: mytardis-git
 
@@ -103,7 +104,7 @@ bootstrap:
         - file: buildout-cfg
         - git: mytardis-git
         - pkg: requirements
-        - file.directory: {{ pillar['mytardis_user'] }}
+        - file.directory: {{ pillar['mytardis_base_dir'] }}
 
 django-sync-migrate:
   cmd.run:
