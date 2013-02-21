@@ -6,7 +6,7 @@ supervisor:
 
 /var/run/uwsgi/app/mytardis/socket:
   file.touch:
-    - user: mytardis
+    - user: {{ pillar['mytardis_user'] }}
     - group: nginx
     - mode: 660
     - makedirs: True

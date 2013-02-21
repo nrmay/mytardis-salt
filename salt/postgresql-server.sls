@@ -38,19 +38,3 @@ postgresql-server:
     - require_in:
         - service: postgresql
 {% endif %}
-
-  postgres_user:
-    - present
-    - name: mytardis
-    - password: mytardis
-    - host: localhost
-    - runas: postgres
-    - require:
-        - service: postgresql
-  postgres_database:
-    - present
-    - name: mytardis
-    - runas: postgres
-    - owner: mytardis
-    - require:
-      - postgres_user.present: mytardis

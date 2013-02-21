@@ -2,7 +2,7 @@
         pillar['mytardis_base_dir']~"/"~pillar['mytardis_branch'] %}
 
 # create mytardis user under which to run the server
-mytardis:
+{{ pillar['mytardis_user'] }}:
   user.present:
     - fullname: My Tardis
     - shell: /bin/bash
@@ -11,8 +11,9 @@ mytardis:
 {{ pillar['mytardis_base_dir'] }}:
   file.directory:
     - mode: 755
+    - user: {{ pillar['mytardis_user'] }}
     - require:
-      - user: mytardis
+      - user: {{ pillar['mytardis_user'] }}
 
 # install git
 {{ pillar['git'] }}:
@@ -27,9 +28,9 @@ mytardis-git:
         {{ mytardis_inst_dir }}
     - force: true
     - submodules: true
-    - runas: mytardis
+    - runas: {{ pillar['mytardis_user'] }}
     - require:
-      - user: mytardis
+      - user: {{ pillar['mytardis_user'] }}
       - pkg: {{ pillar['git'] }}
 
 # install required packages for buildout. This is Ubuntu only at the moment
@@ -73,9 +74,9 @@ buildout-cfg:
     - template: jinja
     - context:
         mytardis_dir: {{ mytardis_inst_dir }}
-    - user: mytardis
+    - user: {{ pillar['mytardis_user'] }}
     - require:
-        - user: mytardis
+        - user: {{ pillar['mytardis_user'] }}
     - watch:
         - git: mytardis-git
 
@@ -85,17 +86,17 @@ settings.py:
     - name: {{ mytardis_inst_dir }}/tardis/settings.py
     - source: salt://templates/settings.py
     - template: jinja
-    - user: mytardis
+    - user: {{ pillar['mytardis_user'] }}
     - require:
         - git: mytardis-git
-        - user: mytardis
+        - user: {{ pillar['mytardis_user'] }}
 
 # run shell script that builds mytardis with buildout and populates the db
 bootstrap:
   cmd.run:
     - name: python bootstrap.py -v 1.7.0 -c buildout-salt.cfg
     - cwd: {{ mytardis_inst_dir }}
-    - user: mytardis
+    - user: {{ pillar['mytardis_user'] }}
     - unless: ls {{ mytardis_inst_dir }}/bin/buildout
     - require:
         - file: buildout-cfg
@@ -106,7 +107,7 @@ django-sync-migrate:
   cmd.run:
     - name: bin/django syncdb --noinput --migrate
     - cwd: {{ mytardis_inst_dir }}
-    - user: mytardis
+    - user: {{ pillar['mytardis_user'] }}
     - watch:
         - file: settings.py
         - git: mytardis-git
@@ -118,7 +119,7 @@ buildout:
   cmd.wait:
     - name: bin/buildout -c buildout-salt.cfg
     - cwd: {{ mytardis_inst_dir }}
-    - user: mytardis
+    - user: {{ pillar['mytardis_user'] }}
     - watch:
         - git: mytardis-git
         - file: buildout-cfg
@@ -128,16 +129,15 @@ buildout:
 bin/django collectstatic -l --noinput:
   cmd.run:
     - cwd: {{ mytardis_inst_dir }}
-    - user: mytardis
+    - user: {{ pillar['mytardis_user'] }}
     - watch:
         - file: settings.py
         - cmd: buildout
 
-
 # common uwsgi configuration
 {{ mytardis_inst_dir }}/wsgi.py:
   file.managed:
-    - user: mytardis
+    - user: {{ pillar['mytardis_user'] }}
     - source: salt://templates/wsgi.py
     - require: 
         - cmd.run: bootstrap
