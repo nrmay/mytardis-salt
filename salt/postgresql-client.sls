@@ -5,10 +5,10 @@ postgres.db_exists:
 #    - runas: postgres
 {% endif %}
 #    - owner: {{ pillar['postgres.user'] }}
+{% if pillar['postgres.host'] == "localhost" %}
     - require:
       - postgres_user.present: {{ pillar['postgres.user'] }}
 
-{% if pillar['postgres.host'] == "localhost" %}
 {{ pillar['postgres.user'] }}:
   postgres_user:
     - present

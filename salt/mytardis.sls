@@ -126,7 +126,6 @@ buildout:
     - watch:
         - git: mytardis-git
         - file: buildout-cfg
-    - require:
         - cmd: bootstrap
 
 bin/django collectstatic -l --noinput:
