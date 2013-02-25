@@ -15,3 +15,11 @@ DATABASES = {
 INSTALLED_APPS = filter(lambda a: a != 'tardis.apps.equipment', INSTALLED_APPS)
 
 INSTALLED_APPS += ('south',)
+
+{% if "apps" in pillar %}
+INSTALLED_APPS += (
+{% for app in pillar['apps'] %}
+    '{{ app }}',
+{% endfor %}
+    )
+{% endif %}
