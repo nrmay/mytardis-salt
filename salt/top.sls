@@ -1,6 +1,7 @@
 base:
   '*':
     - mytardis
+    - supervisor
 
   'os:Ubuntu':
     - match: grain

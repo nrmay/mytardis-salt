@@ -143,3 +143,21 @@ bin/django collectstatic -l --noinput:
     - source: salt://templates/wsgi.py
     - require: 
         - cmd.run: bootstrap
+
+/etc/supervisord.conf:
+  file.append:
+    - text: |
+      [program:celeryd]
+      command={{ mytardis_inst_dir}}/bin/django celeryd --concurrency 5
+      logfile={{ mytardis_inst_dir }}/celeryd.log
+      log_stdout=true
+      log_stderr=true
+      [program:celerybeat]
+      command={{ mytardis_inst_dir}}/bin/django celerybeat
+      logfile={{ mytardis_inst_dir }}/celerybeat.log
+      log_stdout=true
+      log_stderr=true
+    - require:
+        cmd.wait: buildout
+    - requre_in:
+      - cmd.run: service supervisord restart
