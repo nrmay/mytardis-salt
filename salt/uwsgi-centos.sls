@@ -24,7 +24,7 @@ uwsgi-supervisor:
     - require:
         - file.touch: /var/run/uwsgi/app/mytardis/socket
     - require_in:
-        - file.managed: /etc/supervisord.conf
+        - file: /etc/supervisord.conf
 
 
 

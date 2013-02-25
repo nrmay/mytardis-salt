@@ -161,5 +161,5 @@ celery-supervisor:
         - log_stderr=true
     - require:
         - cmd.wait: buildout
-    - requre_in:
-        - file.managed: /etc/supervisord.conf
+    - require_in:
+        - file: /etc/supervisord.conf
