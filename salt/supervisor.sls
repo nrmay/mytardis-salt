@@ -4,6 +4,7 @@ supervisor:
 /etc/supervisord.conf:
   file.managed:
     - source: salt://templates/supervisord.conf
+    - template: jinja
     - require:
         - pkg: supervisor
 
