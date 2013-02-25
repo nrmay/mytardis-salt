@@ -23,3 +23,10 @@ INSTALLED_APPS += (
 {% endfor %}
     )
 {% endif %}
+
+{% if "django_settings" in pillar %}
+{% for setting in pillar['django_settings'] %}
+{{ setting }}
+{% endfor %}
+{% endif %}
+
