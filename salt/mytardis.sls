@@ -2,8 +2,9 @@
         pillar['mytardis_base_dir']~"/"~pillar['mytardis_branch'] %}
 
 # create mytardis user under which to run the server
-{{ pillar['mytardis_user'] }}:
+mytardis-user:
   user.present:
+    - name: {{ pillar['mytardis_user'] }}
     - fullname: My Tardis
     - shell: /bin/bash
     - home: {{ pillar['mytardis_base_dir'] }}
@@ -13,7 +14,7 @@
     - mode: 755
     - user: {{ pillar['mytardis_user'] }}
     - require:
-      - user: {{ pillar['mytardis_user'] }}
+      - user: mytardis-user
 
 # install git
 {{ pillar['git'] }}:
@@ -30,7 +31,7 @@ mytardis-git:
     - submodules: true
     - runas: {{ pillar['mytardis_user'] }}
     - require:
-      - user: {{ pillar['mytardis_user'] }}
+      - user: mytardis-user
       - file.directory: {{ pillar['mytardis_base_dir'] }}
       - pkg: {{ pillar['git'] }}
 
@@ -77,7 +78,7 @@ buildout-cfg:
         mytardis_dir: {{ mytardis_inst_dir }}
     - user: {{ pillar['mytardis_user'] }}
     - require:
-        - user: {{ pillar['mytardis_user'] }}
+        - user: mytardis-user
         - file.directory: {{ pillar['mytardis_base_dir'] }}
     - watch:
         - git: mytardis-git
@@ -91,7 +92,7 @@ settings.py:
     - user: {{ pillar['mytardis_user'] }}
     - require:
         - git: mytardis-git
-        - user: {{ pillar['mytardis_user'] }}
+        - user: mytardis-user
 
 # run shell script that builds mytardis with buildout and populates the db
 bootstrap:
@@ -116,7 +117,7 @@ django-sync-migrate:
         - git: mytardis-git
         - cmd: buildout
     - require:
-        - module: postgres.db_exists
+        - postgres_database: {{ pillar['postgres.db'] }}
 
 buildout:
   cmd.wait:

@@ -18,17 +18,18 @@ postgresql-server:
 
   service:
     - running
+    - name: postgresql
     - require:
-      - pkg: postgresql
+      - pkg: postgresql-server
 {% if grains['os'] == 'Ubuntu' %}
-      - file: postgresql
+      - file: postgresql-server
 {% endif %}
 
 {% if grains['os'] == 'Ubuntu' %}
   cmd.run:
     - name: service postgresql restart
     - require:
-      - file: postgresql
+      - file: postgresql-server
 {% endif %}
 
 {% if grains['os'] == 'CentOS' or grains['os'] == "RedHat" %}
@@ -36,5 +37,6 @@ postgresql-server:
     - name: service postgresql initdb
     - unless: ls /var/lib/pgsql/data/base
     - require_in:
-        - service: postgresql
+        - service: postgresql-server
 {% endif %}
+

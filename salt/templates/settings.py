@@ -4,9 +4,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': '{{ pillar['postgres.db'] }}',
-        'USER': '{{ pillar['postgres.user'] }}',
-        'PASSWORD': '{{ pillar['postgres.pass'] }}',
+        'USER': '{{ pillar['mytardis_db_user'] }}',
+        'PASSWORD': '{{ pillar['mytardis_db_pass'] }}',
+{% if 'postgres.host' not in pillar %}
+        'HOST': '',
+{% else %}
         'HOST': '{{ pillar['postgres.host'] }}',
+{% endif %}
         'PORT': '',
     }
 }
