@@ -8,6 +8,14 @@ mytardis-user:
     - fullname: My Tardis
     - shell: /bin/bash
     - home: {{ pillar['mytardis_base_dir'] }}
+    - groups:
+        - {{ pillar['mytardis_group'] }}
+    - require:
+        - group: {{ pillar['mytardis_group'] }}
+
+{{ pillar['mytardis_group'] }}:
+  group:
+    - present
 
 {{ pillar['mytardis_base_dir'] }}:
   file.directory:
@@ -164,3 +172,37 @@ celery-supervisor:
         - cmd.wait: buildout
     - require_in:
         - file: /etc/supervisord.conf
+
+# storage paths
+{% if "file_store_path" in pillar %}
+{{ pillar['file_store_path'] }}:
+  file.directory:
+    - mode: 775
+    - user: {{ pillar['mytardis_user'] }}
+    - group: {{ pillar['mytardis_group'] }}
+    - require:
+      - user: {{ pillar['mytardis_user'] }}
+      - group: {{ pillar['mytardis_group'] }}
+{% endif %}
+
+{% if "staging_path" in pillar %}
+{{ pillar['staging_path'] }}:
+  file.directory:
+    - mode: 775
+    - user: {{ pillar['mytardis_user'] }}
+    - group: {{ pillar['mytardis_group'] }}
+    - require:
+      - user: {{ pillar['mytardis_user'] }}
+      - group: {{ pillar['mytardis_group'] }}
+{% endif %}
+
+{% if "sync_temp_path" in pillar %}
+{{ pillar['sync_temp_path'] }}:
+  file.directory:
+    - mode: 775
+    - user: {{ pillar['mytardis_user'] }}
+    - group: {{ pillar['mytardis_group'] }}
+    - require:
+      - user: {{ pillar['mytardis_user'] }}
+      - group: {{ pillar['mytardis_group'] }}
+{% endif %}

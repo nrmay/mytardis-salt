@@ -28,9 +28,27 @@ INSTALLED_APPS += (
     )
 {% endif %}
 
+{% if "secret_key" in pillar %}
+SECRET_KEY = "{{ pillar['secret_key'] }}"
+{% else %}
+SECRET_KEY = None
+{% endif %}
+
+{% if "file_store_path" in pillar %}
+FILE_STORE_PATH = "{{ pillar['file_store_path'] }}"
+{% endif %}
+
+{% if "staging_path" in pillar %}
+STAGING_PATH = "{{ pillar['staging_path'] }}"
+{% endif %}
+
+{% if "sync_temp_path" in pillar %}
+SYNC_TEMP_PATH = "{{ pillar['sync_temp_path'] }}"
+{% endif %}
+
+
 {% if "django_settings" in pillar %}
 {% for setting in pillar['django_settings'] %}
 {{ setting }}
 {% endfor %}
 {% endif %}
-
