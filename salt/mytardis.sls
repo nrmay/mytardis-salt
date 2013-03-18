@@ -5,17 +5,16 @@
 mytardis-user:
   user.present:
     - name: {{ pillar['mytardis_user'] }}
-    - fullname: My Tardis
     - shell: /bin/bash
     - home: {{ pillar['mytardis_base_dir'] }}
     - groups:
         - {{ pillar['mytardis_group'] }}
     - require:
-        - group: {{ pillar['mytardis_group'] }}
+        - group: mytardis-group
 
-{{ pillar['mytardis_group'] }}:
-  group:
-    - present
+mytardis-group:
+  group.present:
+    - name: {{ pillar['mytardis_group'] }}
 
 {{ pillar['mytardis_base_dir'] }}:
   file.directory:
@@ -182,7 +181,7 @@ celery-supervisor:
     - group: {{ pillar['mytardis_group'] }}
     - require:
       - user: {{ pillar['mytardis_user'] }}
-      - group: {{ pillar['mytardis_group'] }}
+      - group: mytardis-group
 {% endif %}
 
 {% if "staging_path" in pillar %}
@@ -193,7 +192,7 @@ celery-supervisor:
     - group: {{ pillar['mytardis_group'] }}
     - require:
       - user: {{ pillar['mytardis_user'] }}
-      - group: {{ pillar['mytardis_group'] }}
+      - group: mytardis-group
 {% endif %}
 
 {% if "sync_temp_path" in pillar %}
@@ -204,5 +203,5 @@ celery-supervisor:
     - group: {{ pillar['mytardis_group'] }}
     - require:
       - user: {{ pillar['mytardis_user'] }}
-      - group: {{ pillar['mytardis_group'] }}
+      - group: mytardis-group
 {% endif %}

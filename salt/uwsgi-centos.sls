@@ -7,6 +7,8 @@
     - group: nginx
     - mode: 660
     - makedirs: True
+    - require_in:
+        - cmd: service supervisord restart
 
 uwsgi-supervisor:
   file.accumulated:
