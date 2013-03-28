@@ -15,7 +15,7 @@ Vagrant::Config.run do |config|
     salt.minion_config = "minion.conf"
     # salt.temp_config_dir = "/existing/folder/on/basebox/"
     salt.salt_install_type = "git"
-    salt.salt_install_args = "postgres_db_fix"
+    salt.salt_install_args = "develop"
 
     ## If you have a remote master setup, you can add
     ## your preseeded minion key
