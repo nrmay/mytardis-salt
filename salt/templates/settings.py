@@ -3,7 +3,7 @@ from tardis.settings_changeme import *
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '{{ pillar['postgres.db'] }}',
+        'NAME': '{{ pillar['mytardis_db'] }}',
         'USER': '{{ pillar['mytardis_db_user'] }}',
         'PASSWORD': '{{ pillar['mytardis_db_pass'] }}',
 {% if 'postgres.host' not in pillar %}

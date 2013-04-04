@@ -124,7 +124,7 @@ django-sync-migrate:
         - git: mytardis-git
         - cmd: buildout
     - require:
-        - postgres_database: {{ pillar['postgres.db'] }}
+        - postgres_database: {{ pillar['mytardis_db'] }}
 
 buildout:
   cmd.wait:
@@ -155,7 +155,11 @@ bin/django collectstatic -l --noinput:
 celery-supervisor:
   file.accumulated:
     - name: supervisord
+{% if grains['os'] == 'Ubuntu' %}
+    - filename: /etc/supervisor/supervisord.conf
+{% else %}
     - filename: /etc/supervisord.conf
+{% endif %}
     - text:
         - "[program:celeryd]"
         - command={{ mytardis_inst_dir}}/bin/django celeryd --concurrency 5
@@ -170,7 +174,7 @@ celery-supervisor:
     - require:
         - cmd.wait: buildout
     - require_in:
-        - file: /etc/supervisord.conf
+        - file: supervisord.conf
 
 # storage paths
 {% if "file_store_path" in pillar %}

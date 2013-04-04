@@ -20,16 +20,22 @@ postgresql-server:
     - running
     - name: postgresql
     - require:
-      - pkg: postgresql-server
+        - pkg: postgresql-server
 {% if grains['os'] == 'Ubuntu' %}
-      - file: postgresql-server
+        - file: postgresql-server
 {% endif %}
+    - require_in:
+        - postgres_database: mytardis_db
+        - postgres_user: mytardis_db_user
 
 {% if grains['os'] == 'Ubuntu' %}
   cmd.run:
     - name: service postgresql restart
     - require:
       - file: postgresql-server
+    - require_in:
+        - postgres_database: mytardis_db
+        - postgres_user: mytardis_db_user
 {% endif %}
 
 {% if grains['os'] == 'CentOS' or grains['os'] == "RedHat" %}
