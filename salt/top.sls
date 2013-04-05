@@ -15,6 +15,7 @@ base:
   'os:RedHat':
     - match: grain
     - uwsgi-centos
+    - supervisor-centos
 
   'roles:master-host':
     - match: grain
