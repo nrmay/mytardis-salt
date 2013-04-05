@@ -1,15 +1,16 @@
 base:
   '*':
     - mytardis
-    - supervisor
 
   'os:Ubuntu':
     - match: grain
     - uwsgi-ubuntu
+    - supervisor-ubuntu
 
   'os:CentOS':
     - match: grain
     - uwsgi-centos
+    - supervisor-centos
 
   'os:RedHat':
     - match: grain
