@@ -8,7 +8,7 @@
     - mode: 660
     - makedirs: True
     - require_in:
-        - cmd: service supervisord restart
+        - cmd: supervisorctl start all
 
 uwsgi-supervisor:
   file.accumulated:
