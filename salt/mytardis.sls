@@ -127,7 +127,7 @@ django-sync-migrate:
         - postgres_database: {{ pillar['mytardis_db'] }}
 
 buildout:
-  cmd.wait:
+  cmd.run:
     - name: bin/buildout -c buildout-salt.cfg
     - cwd: {{ mytardis_inst_dir }}
     - user: {{ pillar['mytardis_user'] }}
