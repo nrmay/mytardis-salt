@@ -1,12 +1,18 @@
 {% set mytardis_inst_dir = 
         pillar['mytardis_base_dir']~"/"~pillar['mytardis_branch'] %}
 
+python-pip:
+  pkg.installed      
+
 supervisor:
-  pip.installed
+  pip.installed:
+    - require:
+        - pkg: python-pip
 
 /etc/init.d/supervisord:
   file.managed:
     - source: salt://templates/init-d-supervisord
+    - mode: 750
     - require:
         - file: /etc/sysconfig/supervisord
 
