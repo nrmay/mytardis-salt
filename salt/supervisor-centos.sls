@@ -4,7 +4,7 @@
 python-pip:
   pkg.installed      
 
-supervisor:
+supervisor==3.0a12:
   pip.installed:
     - require:
         - pkg: python-pip

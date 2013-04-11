@@ -176,7 +176,7 @@ celery-supervisor:
         - log_stdout=true
         - log_stderr=true
     - require:
-        - cmd.wait: buildout
+        - cmd: buildout
     - require_in:
         - file: supervisord.conf
 
