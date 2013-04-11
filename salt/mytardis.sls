@@ -162,19 +162,19 @@ celery-supervisor:
 {% endif %}
     - text:
         - "[program:celeryd]"
-        - directory={{ mytardis_inst_dir }}
-        - command={{ mytardis_inst_dir}}/bin/django celeryd --concurrency 5
-        - user={{ pillar['mytardis_user'] }}
-        - logfile={{ mytardis_inst_dir }}/celeryd.log
-        - log_stdout=true
-        - log_stderr=true
+        - "directory={{ mytardis_inst_dir }}"
+        - "command={{ mytardis_inst_dir}}/bin/django celeryd --concurrency 5"
+        - "user={{ pillar['mytardis_user'] }}"
+        - "logfile={{ mytardis_inst_dir }}/celeryd.log"
+        - "log_stdout=true"
+        - "log_stderr=true"
         - "[program:celerybeat]"
-        - directory={{ mytardis_inst_dir }}
-        - command={{ mytardis_inst_dir}}/bin/django celerybeat
-        - user={{ pillar['mytardis_user'] }}
-        - logfile={{ mytardis_inst_dir }}/celerybeat.log
-        - log_stdout=true
-        - log_stderr=true
+        - "directory={{ mytardis_inst_dir }}"
+        - "command={{ mytardis_inst_dir}}/bin/django celerybeat"
+        - "user={{ pillar['mytardis_user'] }}"
+        - "logfile={{ mytardis_inst_dir }}/celerybeat.log"
+        - "log_stdout=true"
+        - "log_stderr=true"
     - require:
         - cmd: buildout
     - require_in:
