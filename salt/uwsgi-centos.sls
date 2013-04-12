@@ -20,9 +20,8 @@ uwsgi-supervisor:
         - "    --xml {{ mytardis_inst_dir}}/parts/uwsgi/uwsgi.xml"
         - ;          --logto {{ mytardis_inst_dir }}/uwsgi.log
         - ; supervisor version <3 needs stdout, cannot let uwsgi do the logging
-        - logfile=/var/log/supervisor/uwsgi.log
-        - log_stdout=true
-        - log_stderr=true
+        - stdout_logfile=/var/log/supervisor/uwsgi.log
+        - redirect_stderr=true
     - require:
         - file.touch: /var/run/uwsgi/app/mytardis/socket
     - require_in:

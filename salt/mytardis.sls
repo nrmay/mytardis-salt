@@ -160,25 +160,44 @@ celery-supervisor:
 {% else %}
     - filename: /etc/supervisord.conf
 {% endif %}
-    - text:
-        - "[program:celeryd]"
-        - "directory={{ mytardis_inst_dir }}"
-        - "command={{ mytardis_inst_dir}}/bin/django celeryd --concurrency 5"
-        - "user={{ pillar['mytardis_user'] }}"
-        - "logfile={{ mytardis_inst_dir }}/celeryd.log"
-        - "log_stdout=true"
-        - "log_stderr=true"
-        - "[program:celerybeat]"
-        - "directory={{ mytardis_inst_dir }}"
-        - "command={{ mytardis_inst_dir}}/bin/django celerybeat"
-        - "user={{ pillar['mytardis_user'] }}"
-        - "logfile={{ mytardis_inst_dir }}/celerybeat.log"
-        - "log_stdout=true"
-        - "log_stderr=true"
+    - text: 
+        - "[program:celeryd]\n\
+directory={{ mytardis_inst_dir }}\n\
+command={{ mytardis_inst_dir}}/bin/django celeryd --concurrency 5\n\
+user={{ pillar['mytardis_user'] }}\n\
+stdout_logfile={{ mytardis_inst_dir }}/celeryd.log\n\
+redirect_stderr=true\n\
+[program:celerybeat]\n\
+directory={{ mytardis_inst_dir }}\n\
+command={{ mytardis_inst_dir}}/bin/django celerybeat\n\
+user={{ pillar['mytardis_user'] }}\n\
+stdout_logfile={{ mytardis_inst_dir }}/celerybeat.log\n\
+redirect_stderr=true\n\
+"
     - require:
         - cmd: buildout
     - require_in:
         - file: supervisord.conf
+
+celeryd:
+  supervisord:
+{% if salt['pillar.get']('running_services:celeryd', true) %}
+    - running
+{% else %}
+    - dead
+{% endif %}
+    - require:
+        - cmd: supervisor-service-restart
+
+celerybeat:
+  supervisord:
+{% if salt['pillar.get']('running_services:celerybeat', true) %}
+    - running
+{% else %}
+    - dead
+{% endif %}
+    - require:
+        - cmd: supervisor-service-restart
 
 # storage paths
 {% if "file_store_path" in pillar %}
