@@ -144,6 +144,14 @@ bin/django collectstatic -l --noinput:
         - file: settings.py
         - cmd: buildout
 
+# load licenses
+bin/django loaddata tardis/tardis_portal/fixtures/cc_licenses.json:
+  cmd.run:
+    - cwd: {{ mytardis_inst_dir }}
+    - user: {{ pillar['mytardis_user'] }}
+    - require:
+        - cmd: django-sync-migrate
+
 # common uwsgi configuration
 {{ mytardis_inst_dir }}/wsgi.py:
   file.managed:

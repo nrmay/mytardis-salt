@@ -1,5 +1,5 @@
 mytardis_repo: "https://github.com/grischa/mytardis.git"
-mytardis_branch: "synch-views"
+mytardis_branch: "deep-storage"
 mytardis_base_dir: "/opt/mytardis"
 
 mytardis_user: "mytardis"
@@ -35,3 +35,9 @@ django_settings:
 running_services:
   celeryd: true
   celerybeat: false
+
+uwsgi_servers:
+  - address: unix:/var/run/uwsgi/app/mytardis/socket
+    parameters: ""
+  - address: example-server.com
+    parameters: down
