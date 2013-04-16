@@ -36,8 +36,10 @@ running_services:
   celeryd: true
   celerybeat: false
 
-uwsgi_servers:
+nginx_upstream_servers:
   - address: unix:/var/run/uwsgi/app/mytardis/socket
     parameters: ""
-  - address: example-server.com
+  - address: "localhost:3031"
     parameters: down
+
+uwsgi_tcp_socket: true
