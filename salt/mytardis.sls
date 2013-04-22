@@ -51,6 +51,7 @@ requirements:
       - libsasl2-dev
       - libxml2-dev
       - libxslt1-dev
+      - make
 {% if grains['osrelease'] == "12.10" %}
       - libmagickwand5
 {% else %}

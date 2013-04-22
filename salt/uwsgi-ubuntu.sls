@@ -27,8 +27,8 @@ service uwsgi restart:
 
 # fix for buggy Ubuntu 12.04 uwsgi
 /usr/bin/uwsgi:
-  file.rename: # managed files only work with off-client sources
-    - source: {{ mytardis_inst_dir }}/bin/uwsgi
+  file.symlink: # managed files only work with off-client sources
+    - target: {{ mytardis_inst_dir }}/bin/uwsgi
     - force: True
     - require:
         - cmd.run: service uwsgi stop

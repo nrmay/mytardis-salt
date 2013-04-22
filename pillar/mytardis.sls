@@ -1,5 +1,5 @@
-mytardis_repo: "https://github.com/grischa/mytardis.git"
-mytardis_branch: "deep-storage"
+mytardis_repo: "https://github.com/mytardis/mytardis.git"
+mytardis_branch: "master"
 mytardis_base_dir: "/opt/mytardis"
 
 mytardis_user: "mytardis"
