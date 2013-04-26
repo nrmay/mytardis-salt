@@ -72,6 +72,7 @@ ssl-cert:
   file.managed:
     - name: {{ ssldir }}/{{ servername }}.crt
     - source: salt://templates/pillarfilledfile
+    - template: jinja
     - context:
         pillarcontent: sslcert
     - require:
@@ -81,6 +82,7 @@ ssl-key:
   file.managed:
     - name: {{ ssldir }}/{{ servername }}.key
     - source: salt://templates/pillarfilledfile
+    - template: jinja
     - context:
         pillarcontent: sslkey
     - require:
