@@ -132,7 +132,7 @@ load-fixtures:
     - name: bin/django loaddata locations.json
     - cwd: {{ mytardis_inst_dir }}
     - user: {{ pillar['mytardis_user'] }}
-    - watch:
+    - require:
         - cmd: django-sync-migrate
     - watch:
         - file: locations-fixture
