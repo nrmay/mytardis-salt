@@ -60,3 +60,29 @@ service nginx restart:
 lokkit -s http -s https:
   cmd.run: []
 {% endif %}
+
+{% if salt['pillar.get']("nginx_ssl", False) %}
+{% set ssldir = salt['pillar.get']('nginx_ssl_dir', "/etc/ssl") %}
+{% set servername = salt['pillar.get']('nginx_ssl_server_name') %}
+ssldir:
+  file.directory:
+    - name: {{ ssldir }}
+
+ssl-cert:
+  file.managed:
+    - name: {{ ssldir }}/{{ servername }}.crt
+    - source: salt://template/pillarfilledfile
+    - context:
+        pillarcontent: sslcert
+    - require:
+        - file: ssldir
+
+ssl-key:
+  file.managed:
+    - name: {{ ssldir }}/{{ servername }}.key
+    - source: salt://template/pillarfilledfile
+    - context:
+        pillarcontent: sslkey
+    - require:
+        - file: ssldir
+{% endif %}
