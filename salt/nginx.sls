@@ -71,7 +71,7 @@ ssldir:
 ssl-cert:
   file.managed:
     - name: {{ ssldir }}/{{ servername }}.crt
-    - source: salt://template/pillarfilledfile
+    - source: salt://templates/pillarfilledfile
     - context:
         pillarcontent: sslcert
     - require:
@@ -80,7 +80,7 @@ ssl-cert:
 ssl-key:
   file.managed:
     - name: {{ ssldir }}/{{ servername }}.key
-    - source: salt://template/pillarfilledfile
+    - source: salt://templates/pillarfilledfile
     - context:
         pillarcontent: sslkey
     - require:
