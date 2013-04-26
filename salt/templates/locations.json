@@ -1,0 +1,22 @@
+[
+    {"pk": 1,
+     "model": "tardis_portal.location",
+     "fields": {
+	 "name": "local",
+	 "url": "file://{{ salt['pillar.get']('file_store_path', default_fs_path) }}",
+	 "priority": 10,
+	 "is_available": true,
+	 "transfer_provider": "local",
+	 "type": "online"}
+    },
+    {"pk": 2,
+     "model": "tardis_portal.location",
+     "fields": {
+	 "name": "staging",
+	 "url": "file://{{ salt['pillar.get']('staging_path', default_st_path) }}",
+	 "priority": 5,
+	 "is_available": true,
+	 "transfer_provider": "local",
+	 "type": "external"}
+    }
+]

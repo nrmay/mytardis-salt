@@ -115,6 +115,28 @@ bootstrap:
         - pkg: requirements
         - file.directory: {{ pillar['mytardis_base_dir'] }}
 
+locations-fixture:
+  file.managed:
+    - name: {{ mytardis_inst_dir }}/tardis/tardis_portal/fixtures/locations.json
+    - source: salt://templates/locations.json
+    - template: jinja
+    - context:
+        default_fs_path: {{ mytardis_inst_dir }}/var/store
+        default_st_path: {{ mytardis_inst_dir }}/var/staging
+    - user: {{ pillar['mytardis_user'] }}
+    - watch:
+        - git: mytardis-git
+
+load-fixtures:
+  cmd.run:
+    - name: bin/django loaddata locations.json
+    - cwd: {{ mytardis_inst_dir }}
+    - user: {{ pillar['mytardis_user'] }}
+    - watch:
+        - cmd: django-sync-migrate
+    - watch:
+        - file: locations-fixture
+
 django-sync-migrate:
   cmd.run:
     - name: bin/django syncdb --noinput --migrate
