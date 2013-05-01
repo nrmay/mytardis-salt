@@ -42,11 +42,11 @@ mytardis-git:
       - file.directory: {{ pillar['mytardis_base_dir'] }}
       - pkg: {{ pillar['git'] }}
 
-# install required packages for buildout. This is Ubuntu only at the moment
+# install required packages for buildout.
 requirements:
   pkg.installed:
     - names:
-{% if grains['os'] == "Ubuntu" %}
+{% if grains['os_family'] == "Debian" %}
       - python-dev
       - libsasl2-dev
       - libxml2-dev
@@ -58,7 +58,7 @@ requirements:
       - libmagickwand4
 {% endif %}
       - postgresql-server-dev-all
-{% elif grains['os'] == "CentOS" or grains['os'] == "RedHat" %}
+{% elif grains['os_family'] == "RedHat" %}
       - python-devel
       - libgsasl-devel
       - libxml2-devel
@@ -67,7 +67,7 @@ requirements:
       - postgresql-devel
 {% endif %}
 
-{% if grains['os'] == "CentOS" or grains['os'] == "RedHat" %}
+{% if grains['os_family'] == "RedHat" %}
 # only available in newest salt version
 devtools:
   module.run:
@@ -186,7 +186,7 @@ bin/django loaddata tardis/tardis_portal/fixtures/cc_licenses.json:
 celery-supervisor:
   file.accumulated:
     - name: supervisord
-{% if grains['os'] == 'Ubuntu' %}
+{% if grains['os_family'] == 'Debian' %}
     - filename: /etc/supervisor/supervisord.conf
 {% else %}
     - filename: /etc/supervisord.conf

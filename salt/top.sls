@@ -2,17 +2,12 @@ base:
   '*':
     - mytardis
 
-  'os:Ubuntu':
+  'os_family:Debian':
     - match: grain
-    - uwsgi-ubuntu
-    - supervisor-ubuntu
+    - uwsgi-debian
+    - supervisor-debian
 
-  'os:CentOS':
-    - match: grain
-    - uwsgi-centos
-    - supervisor-centos
-
-  'os:RedHat':
+  'os_family:RedHat':
     - match: grain
     - uwsgi-centos
     - supervisor-centos

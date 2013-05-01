@@ -8,7 +8,7 @@ nginx:
     - running
 
 # nginx configuration for mytardis. removes default nginx site
-{% if grains['os'] == "Ubuntu" %}
+{% if grains['os_family'] == "Debian" %}
 /etc/nginx/sites-enabled/default:
   file.absent: []
 
@@ -24,16 +24,16 @@ nginx:
     - require:
         - file: /etc/nginx/sites-enabled
         - file: /etc/nginx/sites-available/mytardis.conf
-{% elif grains['os'] == "CentOS" or grains['os'] == "RedHat" %}
+{% elif grains['os_family'] == "RedHat" %}
 /etc/nginx/conf.d/default.conf:
   file.absent:
     - require:
         - pkg: nginx
 {% endif %}
 
-{% if grains['os'] == "Ubuntu" %}
+{% if grains['os_family'] == "Debian" %}
 /etc/nginx/sites-available/mytardis.conf:
-{% elif grains['os'] == "CentOS" or grains['os'] == "RedHat" %}
+{% elif grains['os_family'] == "RedHat" %}
 /etc/nginx/conf.d/mytardis.conf:
 {% endif %}
   file.managed:
@@ -47,16 +47,16 @@ nginx:
 service nginx restart:
   cmd.run:
     - require:
-{% if grains['os'] == "Ubuntu" %}
+{% if grains['os_family'] == "Debian" %}
       - file.symlink: /etc/nginx/sites-enabled/mytardis.conf
       - file.absent: /etc/nginx/sites-enabled/default
-{% elif grains['os'] == "CentOS" or grains['os'] == "RedHat" %}
+{% elif grains['os_family'] == "RedHat" %}
       - file: /etc/nginx/conf.d/mytardis.conf
       - file.absent: /etc/nginx/conf.d/default.conf
 {% endif %}
 
 # open firewall
-{% if grains['os'] == "CentOS" or grains['os'] == "RedHat" %}
+{% if grains['os_family'] == "RedHat" %}
 lokkit -s http -s https:
   cmd.run: []
 {% endif %}

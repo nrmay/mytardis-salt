@@ -1,7 +1,5 @@
-{% if grains['os'] == 'RedHat' %}
+{% if grains['os_family'] == 'RedHat' %}
 git: git
-{% elif grains['os'] == 'Ubuntu' %}
+{% elif grains['os_family'] == 'Debian' %}
 git: git-core
-{% elif grains['os'] == 'CentOS' %}
-git: git
 {% endif %}
