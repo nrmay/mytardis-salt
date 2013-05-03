@@ -18,5 +18,15 @@
 	 "is_available": true,
 	 "transfer_provider": "local",
 	 "type": "external"}
-    }
+    }{% if salt['pillar.get']('sync_temp_path', False) %},
+    {"pk": 3,
+     "model": "tardis_portal.location",
+     "fields": {
+	 "name": "sync",
+	 "url": "file://{{ salt['pillar.get']('sync_temp_path') }}",
+	 "priority": 5,
+	 "is_available": true,
+	 "transfer_provider": "local",
+	 "type": "external"}
+    }{% endif %}
 ]

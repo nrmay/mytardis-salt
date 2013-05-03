@@ -1,4 +1,4 @@
-{% set mytardis_inst_dir = 
+{% set mytardis_inst_dir =
         pillar['mytardis_base_dir']~"/"~pillar['mytardis_branch'] %}
 
 # create mytardis user under which to run the server
@@ -32,7 +32,7 @@ mytardis-git:
   git.latest:
     - name: {{ pillar['mytardis_repo'] }}
     - rev: "{{ pillar['mytardis_branch'] }}"
-    - target: 
+    - target:
         {{ mytardis_inst_dir }}
     - force: true
     - submodules: true
@@ -180,7 +180,7 @@ bin/django loaddata tardis/tardis_portal/fixtures/cc_licenses.json:
   file.managed:
     - user: {{ pillar['mytardis_user'] }}
     - source: salt://templates/wsgi.py
-    - require: 
+    - require:
         - cmd.run: bootstrap
 
 celery-supervisor:
@@ -191,7 +191,7 @@ celery-supervisor:
 {% else %}
     - filename: /etc/supervisord.conf
 {% endif %}
-    - text: 
+    - text:
         - "[program:celeryd]\n\
 directory={{ mytardis_inst_dir }}\n\
 command={{ mytardis_inst_dir}}/bin/django celeryd --concurrency 5\n\
