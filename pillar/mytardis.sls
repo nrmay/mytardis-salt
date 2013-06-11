@@ -1,4 +1,4 @@
-mytardis_repo: "https://github.com/grischa/mytardis.git"
+mytardis_repo: "https://github.com/mytardis/mytardis.git"
 mytardis_branch: "master"
 mytardis_base_dir: "/opt/mytardis"
 
@@ -9,7 +9,7 @@ mytardis_db_user: "mytardis"
 mytardis_db_pass: "mytardis"
 mytardis_db: "mytardis"
 
-secret_key: "8)-9b0kcaj89%2#4j$80q*p1@=93j=@$(+nq7-br6&w4%!#-ku"  
+secret_key: "8)-9b0kcaj89%2#4j$80q*p1@=93j=@$(+nq7-br6&w4%!#-ku"
 # please change!
 # this key is hosted publicly and if you do not change it will make it much
 # easier to compromise the security of your system
