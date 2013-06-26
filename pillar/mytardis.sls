@@ -31,6 +31,7 @@ django_settings:
 #file_store_path: "/var/store"
 #staging_path: "/var/staging"
 #sync_temp_path: "/var/sync_temp"
+#rsync_store_path: "/var/rsync_store"
 
 running_services:
   celeryd: true

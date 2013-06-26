@@ -263,3 +263,14 @@ celerybeat:
       - user: {{ pillar['mytardis_user'] }}
       - group: mytardis-group
 {% endif %}
+
+{% if "rsync_store_path" in pillar %}
+{{ pillar['rsync_store_path'] }}:
+  file.directory:
+    - mode: 775
+    - user: {{ pillar['mytardis_user'] }}
+    - group: {{ pillar['mytardis_group'] }}
+    - require:
+      - user: {{ pillar['mytardis_user'] }}
+      - group: mytardis-group
+{% endif %}

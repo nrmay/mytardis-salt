@@ -28,5 +28,15 @@
 	 "is_available": true,
 	 "transfer_provider": "local",
 	 "type": "external"}
+    }{% endif %}{% if salt['pillar.get']('rsync_store_path', False) %},
+    {"pk": 4,
+     "model": "tardis_portal.location",
+     "fields": {
+	 "name": "rsyncstore",
+	 "url": "file://{{ salt['pillar.get']('rsync_store_path') }}",
+	 "priority": 10,
+	 "is_available": true,
+	 "transfer_provider": "local",
+	 "type": "local"}
     }{% endif %}
 ]
