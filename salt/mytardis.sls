@@ -32,8 +32,7 @@ mytardis-git:
   git.latest:
     - name: {{ pillar['mytardis_repo'] }}
     - rev: "{{ pillar['mytardis_branch'] }}"
-    - target:
-        {{ mytardis_inst_dir }}
+    - target: {{ mytardis_inst_dir }}
     - force: true
     - submodules: true
     - runas: {{ pillar['mytardis_user'] }}
