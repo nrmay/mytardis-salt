@@ -15,6 +15,8 @@ nginx:
     - backup: '.dist'
     - require:
         - pkg: nginx
+    - require_in:
+        - cmd: service nginx restart
 {% endif %}
 
 # nginx configuration for mytardis. removes default nginx site
