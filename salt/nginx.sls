@@ -1,4 +1,4 @@
-{% set mytardis_inst_dir = 
+{% set mytardis_inst_dir =
         pillar['mytardis_base_dir']~"/"~pillar['mytardis_branch'] %}
 
 nginx:
@@ -6,6 +6,16 @@ nginx:
     - installed
   service:
     - running
+
+{% if grains['os_family'] == "RedHat" %}
+/etc/nginx/nginx.conf:
+  file.sed:
+    - before: "worker_processes  1"
+    - after: "worker_processes  5"
+    - backup: '.dist'
+    - require:
+        - pkg: nginx
+{% endif %}
 
 # nginx configuration for mytardis. removes default nginx site
 {% if grains['os_family'] == "Debian" %}
@@ -16,7 +26,7 @@ nginx:
   file.directory:
     - require:
         - pkg: nginx
-  
+
 
 /etc/nginx/sites-enabled/mytardis.conf:
   file.symlink:
@@ -39,7 +49,7 @@ nginx:
   file.managed:
     - source: salt://templates/nginx_site.conf
     - template: jinja
-    - context: 
+    - context:
       mytardis_dir: "{{ mytardis_inst_dir }}"
     - require:
       - pkg.installed: nginx
