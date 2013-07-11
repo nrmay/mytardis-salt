@@ -27,3 +27,7 @@ base:
   'roles:exampledata':
     - match: grain
     - exampledata
+
+  'roles:redis':
+    - match: grain
+    - redis

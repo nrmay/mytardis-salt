@@ -30,7 +30,7 @@ mytardis-group:
 
 mytardis-git:
   git.latest:
-    - name: {{ pillar['mytardis_repo'] }}
+    - name: "{{ pillar['mytardis_repo'] }}"
     - rev: "{{ pillar['mytardis_branch'] }}"
     - target: {{ mytardis_inst_dir }}
     - force: true
