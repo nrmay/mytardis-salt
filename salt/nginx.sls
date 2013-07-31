@@ -75,7 +75,7 @@ lokkit -s http -s https:
 
 {% if salt['pillar.get']("nginx_ssl", False) %}
 {% set ssldir = salt['pillar.get']('nginx_ssl_dir', "/etc/ssl") %}
-{% set servername = salt['pillar.get']('nginx_ssl_server_name') %}
+{% set servername = salt['pillar.get']('nginx_server_name') %}
 ssldir:
   file.directory:
     - name: {{ ssldir }}

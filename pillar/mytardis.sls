@@ -37,6 +37,8 @@ running_services:
   celeryd: true
   celerybeat: false
 
+nginx_server_name: "localhost"
+
 nginx_upstream_servers:
   - address: unix:/var/run/uwsgi/app/mytardis/socket
     parameters: ""
