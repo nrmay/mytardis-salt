@@ -51,12 +51,10 @@ requirements:
       - libxml2-dev
       - libxslt1-dev
       - make
-{% if grains['osrelease'] == "12.10" %}
       - libmagickwand5
-{% else %}
-      - libmagickwand4
-{% endif %}
       - postgresql-server-dev-all
+      - pkg-config
+      - libgraphviz-dev
 {% elif grains['os_family'] == "RedHat" %}
       - python-devel
       - libgsasl-devel
@@ -64,6 +62,7 @@ requirements:
       - libxslt-devel
       - ImageMagick
       - postgresql-devel
+      - graphviz-devel
 {% endif %}
 
 {% if grains['os_family'] == "RedHat" %}

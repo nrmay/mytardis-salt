@@ -8,10 +8,10 @@ postgresql-server:
     {% endif %}
 
 {% if grains['os_family'] == 'Debian' %}
-  file.patch:
+  file.managed:
     - name: /etc/postgresql/9.1/main/pg_hba.conf
-    - source: salt://patches/pg_hba.conf.patch
-    - hash: md5=4d196a766c9695233cf15070a2e1b255
+    - source: salt://templates/pg_hba.conf
+    - template: jinja
     - require:
         - pkg.installed: postgresql
 {% endif %}

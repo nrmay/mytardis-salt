@@ -1,0 +1,4 @@
+log_file: /var/log/salt/cloud
+log_level: info
+log_level_logfile: warning
+delete_sshkeys: True

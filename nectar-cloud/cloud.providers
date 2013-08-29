@@ -1,0 +1,16 @@
+my-nectar-config:
+  minion:
+    master: SALT_MASTER_IP_ADDRESS
+
+  provider: openstack
+  identity_url: 'https://keystone.rc.nectar.org.au:5000/v2.0/'
+  compute_name: 'Compute Service'
+  protocol: ipv4
+  compute_region: 'Melbourne'
+  tenant: NECTAR_ID_DISPLAYED_ON_DASHBOARD
+  tenant_id: ID_WITH_32_HEX_NUMBER
+  user: LOGIN_EMAIL_ADDRESS
+  ssh_key_name: NAME_OF_SSH_KEY_ON_NECTAR
+  ssh_key_file: LOCATION_OF_KEY_FILE_ON_THIS_MACHINE
+  password: NECTAR_PASSWORD_FROM_DASHBOARD
+

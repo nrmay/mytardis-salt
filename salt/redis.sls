@@ -29,7 +29,7 @@ redis-git:
     - rev: "2.6"
     - force: true
     - require:
-      - pkg: git
+      - pkg: {{ pillar['git'] }}
       - file: {{ redis_inst_dir }}
 
 build-redis:

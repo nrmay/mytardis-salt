@@ -1,21 +1,21 @@
 ubuntu_nectar:
-  provider: openstack
+  provider: my-nectar-config
   image: 034f7d4d-4ec2-424d-bbff-a4b8809dc01d
   size: m1.small
   os: Ubuntu
   ssh_username: ubuntu
   sudo: True
   minion:
+    startup_states: highstate
     grains:
       roles:
         - db-server
         - db-client
-        - exampledata
         - master-host
         - redis
 
 centos_nectar:
-  provider: openstack
+  provider: my-nectar-config
   image: e5ccf3bd-17fc-4b4b-92ee-51f9ba8eb0c5
   size: m1.small
   os: CentOS
@@ -26,5 +26,4 @@ centos_nectar:
       roles:
         - db-server
         - db-client
-        - exampledata
         - master-host
