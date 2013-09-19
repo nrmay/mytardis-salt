@@ -1,5 +1,5 @@
 mytardis_repo: "https://github.com/mytardis/mytardis.git"
-mytardis_branch: "master"
+mytardis_branch: "develop"
 mytardis_base_dir: "/opt/mytardis"
 
 mytardis_user: "mytardis"
@@ -40,9 +40,9 @@ running_services:
 nginx_server_name: "localhost"
 
 nginx_upstream_servers:
-  - address: unix:/var/run/uwsgi/app/mytardis/socket
+  - address: unix:/var/run/gunicorn/mytardis/socket
     parameters: ""
-  - address: "localhost:3031"
+  - address: "localhost:8000"
     parameters: down
 
-uwsgi_tcp_socket: true
+gunicorn_tcp_socket: true

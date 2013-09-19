@@ -11,7 +11,7 @@ nginx:
 /etc/nginx/nginx.conf:
   file.sed:
     - before: "worker_processes  1"
-    - after: "worker_processes  5"
+    - after: "worker_processes  3"
     - backup: '.dist'
     - require:
         - pkg: nginx

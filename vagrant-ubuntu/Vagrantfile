@@ -1,25 +1,14 @@
-Vagrant::Config.run do |config|
-  ## Chose your base box
-  config.vm.box = "precise64"
+Vagrant.configure("2") do |config|
+  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/raring/current/raring-server-cloudimg-amd64-vagrant-disk1.box"
+  config.vm.box = "raring64"
+  config.vm.network "forwarded_port", guest: 80, host: 8000, auto_correct: true
+end
 
-  ## For masterless, mount your salt file root
+Vagrant.configure("1") do |config|
   config.vm.share_folder "salt_file_root", "/srv", "../"
 
-  config.vm.forward_port 80, 8000
-
-  ## Use all the defaults:
   config.vm.provision :salt do |salt|
     salt.run_highstate = true
-
-    ## Optional Settings:
     salt.minion_config = "minion.conf"
-    # salt.temp_config_dir = "/existing/folder/on/basebox/"
-    salt.salt_install_type = "git"
-    salt.salt_install_args = "develop"
-
-    ## If you have a remote master setup, you can add
-    ## your preseeded minion key
-    # salt.minion_key = "salt/key/minion.pem"
-    # salt.minion_pub = "salt/key/minion.pub"
   end
 end

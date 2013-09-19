@@ -1,16 +1,10 @@
 base:
-  '*':
+  'roles:mytardis':
+    - match: grain
     - mytardis
-
-  'os_family:Debian':
-    - match: grain
-    - uwsgi-debian
-    - supervisor-debian
-
-  'os_family:RedHat':
-    - match: grain
-    - uwsgi-centos
-    - supervisor-centos
+    - gunicorn
+    - supervisor
+    - postgresql-client
 
   'roles:master-host':
     - match: grain
@@ -19,10 +13,6 @@ base:
   'roles:db-server':
     - match: grain
     - postgresql-server
-
-  'roles:db-client':
-    - match: grain
-    - postgresql-client
 
   'roles:exampledata':
     - match: grain

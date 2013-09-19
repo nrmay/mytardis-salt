@@ -51,10 +51,14 @@ requirements:
       - libxml2-dev
       - libxslt1-dev
       - make
-      - libmagickwand5
-      - postgresql-server-dev-all
+{% if grains['os'] == 'Debian' and grains['osrelease'] <= '6.0.6' %}      - libmagickwand3
+{% elif grains['os'] == 'Ubuntu' and grains['osrelease'] <= '12.04' %}      - libmagickwand4
+{% else %}      - libmagickwand5{% endif %}
+{% if grains['os'] == 'Debian' and grains['osrelease'] <= '6.0.6' %}      - libpq-dev
+{% else %}      - postgresql-server-dev-all{% endif %}
       - pkg-config
       - libgraphviz-dev
+      - libevent-dev
 {% elif grains['os_family'] == "RedHat" %}
       - python-devel
       - libgsasl-devel
@@ -63,6 +67,11 @@ requirements:
       - ImageMagick
       - postgresql-devel
       - graphviz-devel
+{% if grains['os'] == "RedHat" %}
+      - compat-libevent14-devel
+{% else %}
+      - libevent-devel
+{% endif %}
 {% endif %}
 
 {% if grains['os_family'] == "RedHat" %}
@@ -147,9 +156,18 @@ django-sync-migrate:
     - require:
         - postgres_database: {{ pillar['mytardis_db'] }}
 
+bin/django update_permissions:
+  cmd.run:
+    - cwd: {{ mytardis_inst_dir }}
+    - user: {{ pillar['mytardis_user'] }}
+    - watch:
+        - cmd: django-sync-migrate
+    - require_in:
+        - file: {{ mytardis_inst_dir }}/wsgi.py
+
 buildout:
   cmd.run:
-    - name: bin/buildout -c buildout-salt.cfg
+    - name: bin/buildout -N -c buildout-salt.cfg
     - cwd: {{ mytardis_inst_dir }}
     - user: {{ pillar['mytardis_user'] }}
     - watch:
@@ -196,6 +214,7 @@ command={{ mytardis_inst_dir}}/bin/django celeryd --concurrency 5\n\
 user={{ pillar['mytardis_user'] }}\n\
 stdout_logfile={{ mytardis_inst_dir }}/celeryd.log\n\
 redirect_stderr=true\n\
+\n\
 [program:celerybeat]\n\
 directory={{ mytardis_inst_dir }}\n\
 command={{ mytardis_inst_dir}}/bin/django celerybeat\n\
@@ -216,7 +235,7 @@ celeryd:
     - dead
 {% endif %}
     - require:
-        - cmd: supervisor-service-restart
+        - cmd: supervisor-service-start
 
 celerybeat:
   supervisord:
@@ -226,7 +245,7 @@ celerybeat:
     - dead
 {% endif %}
     - require:
-        - cmd: supervisor-service-restart
+        - cmd: supervisor-service-start
 
 # storage paths
 {% if "file_store_path" in pillar %}

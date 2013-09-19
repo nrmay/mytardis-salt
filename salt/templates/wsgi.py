@@ -1,6 +1,5 @@
 
 import os
-import sys
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'tardis.settings'
 
@@ -11,7 +10,8 @@ from django.conf import settings
 if settings.DEBUG:
     from django.views import debug
     try:
-        from django_extensions.management.technical_response import null_technical_500_response
+        from django_extensions.management.technical_response import \
+            null_technical_500_response
     except ImportError:
         def null_technical_500_response(request, exc_type, exc_value, tb):
             raise exc_type, exc_value, tb
