@@ -73,7 +73,7 @@ supervisord.conf:
     - require:
         - pip: supervisor
 
-supervisor-service-restart:
+supervisor-service-start:
   cmd.run:
     - name: service supervisord restart
     - require:
@@ -90,5 +90,5 @@ supervisorctl stop all:
 supervisorctl start all:
   cmd.run:
     - require:
-        - cmd: supervisor-service-restart
+        - cmd: supervisor-service-start
 {% endif %}

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 
-
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       prefix="xsd: http://www.w3.org/2001/XMLSchema#
@@ -78,15 +77,14 @@ The Font Awesome webfont, CSS, and LESS files are licensed under CC BY 3.0.
 
 
 <script type="text/javascript" src="/static/js/main.162812c14b6f.js"></script>
-<script type="text/javascript" src="/static/js/backbone-models.7a4961f2d2b8.js"></script>
+<script type="text/javascript" src="/static/js/backbone-models.208536cf8df6.js"></script>
 
 
 
-<link type="text/css" href="/static/css/default.b31e0d2ed154.css" rel="stylesheet" />
+<link type="text/css" href="/static/css/default.45907c878c2d.css" rel="stylesheet" />
 
 
     
-
 
 
 
@@ -109,12 +107,12 @@ The Font Awesome webfont, CSS, and LESS files are licensed under CC BY 3.0.
         });
     });
     </script>
-    
+
     <script type="text/javascript">
-    // Define canvas HTML   
+    // Define canvas HTML
     canvas = '<canvas style="width: 100px"></canvas>';
     </script>
-    
+
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -166,10 +164,10 @@ The Font Awesome webfont, CSS, and LESS files are licensed under CC BY 3.0.
               </li>
               
               <li>
-                <button class="btn btn-info" onclick="window.location.href=/login/">
+                <a id="login-button" class="btn btn-info" href="/login/">
                   <i class="icon-signin"></i>
                   Log In
-                </button>
+                </a>
               </li>
             
             </ul>
@@ -182,6 +180,33 @@ The Font Awesome webfont, CSS, and LESS files are licensed under CC BY 3.0.
     <div class="container-fluid">
       
 
+      <script type="text/javascript">
+	var showMsg = {
+	    type: "",
+	    showAlert: function(text) {
+		$('#message-container').html(
+		    '<div class="alert ' +
+			this.type +
+			'"><a class="close" data-dismiss="alert">×</a><span>' +
+			text +
+			'</span></div>');
+	    },
+	    success: function(text) {
+		this.type = "alert-success";
+		this.showAlert(text);
+	    },
+	    info: function(text) {
+		this.type = "alert-info";
+		this.showAlert(text);
+	    },
+	    error: function(text) {
+		this.type = "alert-error";
+		this.showAlert(text);
+	    }
+	};
+      </script>
+
+      <div id="message-container" ></div>
       <div id="status-alert"
            class="alert alert-block "
            style="display: none">
@@ -193,7 +218,13 @@ The Font Awesome webfont, CSS, and LESS files are licensed under CC BY 3.0.
             $('#status-alert .message').text('Experiment Created');
           } else if(window.location.hash == '#saved') {
               $('#status-alert .message').text('Experiment Saved');
-          }
+          } else if(window.location.hash.indexOf('#error:') == 0) {
+	      showMsg.error(decodeURIComponent(window.location.hash.substr(7)));
+	      window.location.hash = "";
+	      var scrollV, scrollH, loc = window.location;
+	      if ("pushState" in history)
+		  history.pushState("", document.title, loc.pathname + loc.search);
+	  }
           if ($('#status-alert .message').text().trim() != "") {
             $('#status-alert').css('display', '');
           }
@@ -208,15 +239,41 @@ The Font Awesome webfont, CSS, and LESS files are licensed under CC BY 3.0.
 
         
         <div class="span12"><div class="page-header">
-  <h1>MyTardis Data Store</h1>
-</div>
+    <h1>MyTardis Data Store</h1>
+  </div>
+  <p>
+    
+      Please <a href="/login/">login</a>
+      to see your experiment data.
+    
+  </p>
+  <div class="row-fluid">
+    <div class="span7">
+      
 
-<p>
-
-  Please <a href="/login/">login</a>
-  to see your experiment data.
-
-</p></div>
+      
+	<h3>The 0 most recent public experiments</h3>
+      
+      
+	<div id="experiments" class="accordion">
+      
+      
+	<p>There is no public data available on this server.</p>
+      
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+$(function(){
+    $("#experiments .accordion-body").collapse({parent:"#experiments", toggle: false});
+    $(".explink").click(function(e){
+	e.stopPropagation();
+    });
+    $(".dllink").click(function(e){
+	e.stopPropagation();
+    });
+});
+</script></div>
         
       </div>
 
@@ -227,6 +284,17 @@ The Font Awesome webfont, CSS, and LESS files are licensed under CC BY 3.0.
         </div>
       </div>
 
+      
+      <div class="row-fluid">
+	<div class="span6">
+	  
+	</div>
+	<div class="span6">
+	  <div class="pull-right">
+	  Powered by <a href="https://github.com/mytardis/mytardis">MyTardis
+	  </div>
+	</div>
+      </div>
       
 
     </div>
