@@ -34,6 +34,8 @@ mytardis-git:
     - rev: "{{ pillar['mytardis_branch'] }}"
     - target: {{ mytardis_inst_dir }}
     - force: true
+    - force_checkout: true
+    - always_fetch: true
     - submodules: true
     - runas: {{ pillar['mytardis_user'] }}
     - require:
