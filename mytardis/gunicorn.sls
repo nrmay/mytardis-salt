@@ -41,3 +41,21 @@ redirect_stderr=true\n\
         - file: {{ socketdir }}
     - require_in:
         - file: supervisord.conf
+
+{% if pillar['gunicorn_tcp_socket'] %}
+{% set ca_name = salt['pillar.get']('proxy_ca_name', 'nginx-gunicorn-ca') %}
+tls.create_ca_signed_cert:
+  module.run:
+    - ca_name: '{{ca_name}}'
+    - CN: '{% salt['pillar.get']('nginx_server_name') %}'
+
+tls.create_csr:
+  module.run:
+    - ca_name: '{{ca_name}}'
+    - CN: '{{servername}}'
+    - C: 'AU'
+    - ST: 'Victoria'
+    - L: 'Melbourne'
+    - O: 'MyTardis'
+    - emailAddress: '{% salt['pillar.get']('admin_email_address', 'admin@localhost') %}'
+{% endif %}

@@ -100,3 +100,15 @@ ssl-key:
     - require:
         - file: ssldir
 {% endif %}
+
+# create ssl certificate authority for secured proxy_pass-ing
+{% set ca_name = salt['pillar.get']('proxy_ca_name', 'nginx-gunicorn-ca') %}
+tls.create_ca:
+  module.run:
+    - ca_name: '{{ca_name}}'
+    - CN: '{{ servername }}'
+    - C: 'AU'
+    - ST: 'Victoria'
+    - L: 'Melbourne'
+    - O: 'MyTardis'
+    - emailAddress: '{% salt['pillar.get']('admin_email_address', 'admin@localhost') %}'

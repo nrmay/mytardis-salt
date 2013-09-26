@@ -1,23 +1,23 @@
-base:
+mytardis:
   'roles:mytardis':
-    - match: grain
+    - match: pillar
     - mytardis
     - gunicorn
     - supervisor
     - postgresql-client
 
   'roles:master-host':
-    - match: grain
+    - match: pillar
     - nginx
 
   'roles:db-server':
-    - match: grain
+    - match: pillar
     - postgresql-server
 
   'roles:exampledata':
-    - match: grain
+    - match: pillar
     - exampledata
 
   'roles:redis':
-    - match: grain
+    - match: pillar
     - redis

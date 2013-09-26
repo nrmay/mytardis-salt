@@ -18,6 +18,8 @@ secret_key: "8)-9b0kcaj89%2#4j$80q*p1@=93j=@$(+nq7-br6&w4%!#-ku"
 # chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
 # print get_random_string(50, chars)
 
+admin_email_address: 'admin@localhost'
+
 apps:
   - tardis.apps.slideshow_view
 
