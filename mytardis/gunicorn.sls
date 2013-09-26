@@ -44,18 +44,23 @@ redirect_stderr=true\n\
 
 {% if pillar['gunicorn_tcp_socket'] %}
 {% set ca_name = salt['pillar.get']('proxy_ca_name', 'nginx-gunicorn-ca') %}
+# this cert needs to be created manually before using tcp sockets
+/etc/pki/{{ca_name}}/{{ca_name}}_ca_cert.crt:
+  file.managed:
+    - source: salt://certs/{{ca_name}}_ca_cert.crt
+
 tls.create_ca_signed_cert:
   module.run:
     - ca_name: '{{ca_name}}'
-    - CN: '{% salt['pillar.get']('nginx_server_name') %}'
+    - CN: '{{ salt['pillar.get']('nginx_server_name') }}'
 
 tls.create_csr:
   module.run:
     - ca_name: '{{ca_name}}'
-    - CN: '{{servername}}'
+    - CN: '{{ salt['pillar.get']('nginx_server_name', 'localhost') }}'
     - C: 'AU'
     - ST: 'Victoria'
     - L: 'Melbourne'
     - O: 'MyTardis'
-    - emailAddress: '{% salt['pillar.get']('admin_email_address', 'admin@localhost') %}'
+    - emailAddress: '{{ salt['pillar.get']('admin_email_address', 'admin@localhost') }}'
 {% endif %}
