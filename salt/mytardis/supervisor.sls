@@ -32,11 +32,6 @@ supervisorctl stop all:
     - require:
         - pkg: supervisor
         - file: supervisord.conf
-
-supervisorctl start all:
-  cmd.run:
-    - require:
-        - cmd: supervisor-service-start
 {% else %}
 
 python-pip:
@@ -44,7 +39,7 @@ python-pip:
 
 supervisor:
   pip.installed:
-    - name: supervisor==3.0a12
+    - name: "supervisor>=3.0a12"
     - require:
         - pkg: python-pip
 

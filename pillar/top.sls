@@ -1,4 +1,6 @@
 base:
   '*':
+    - global_settings
     - packages
-    - mytardis
+  'testing':
+    - mytardis-test

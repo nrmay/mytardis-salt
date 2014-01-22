@@ -1,6 +1,3 @@
-{% set mytardis_inst_dir =
-        pillar['mytardis_base_dir']~"/"~pillar['mytardis_branch'] %}
-
 nginx:
   pkg:
     - installed
@@ -16,7 +13,7 @@ nginx:
     - require:
         - pkg: nginx
     - require_in:
-        - cmd: service nginx restart
+        - cmd: service nginx reload
 {% endif %}
 
 # nginx configuration for mytardis. removes default nginx site
@@ -33,7 +30,7 @@ nginx:
 /etc/nginx/sites-enabled/mytardis.conf:
   file.symlink:
     - target: /etc/nginx/sites-available/mytardis.conf
-    - require:
+    - watch:
         - file: /etc/nginx/sites-enabled
         - file: /etc/nginx/sites-available/mytardis.conf
 {% elif grains['os_family'] == "RedHat" %}
@@ -52,13 +49,13 @@ nginx:
     - source: salt://templates/nginx_site.conf
     - template: jinja
     - context:
-      mytardis_dir: "{{ mytardis_inst_dir }}"
+      static_files_dir: "{{ pillar['nginx_static_file_path'] }}"
     - require:
       - pkg.installed: nginx
 
-service nginx restart:
+service nginx reload:
   cmd.run:
-    - require:
+    - watch:
 {% if grains['os_family'] == "Debian" %}
       - file.symlink: /etc/nginx/sites-enabled/mytardis.conf
       - file.absent: /etc/nginx/sites-enabled/default
@@ -83,10 +80,11 @@ ssldir:
 ssl-cert:
   file.managed:
     - name: {{ ssldir }}/{{ servername }}.crt
-    - source: salt://templates/pillarfilledfile
+    - source: salt://templates/cert-chain.template
     - template: jinja
     - context:
-        pillarcontent: sslcert
+        server_cert: sslcert
+        cert_chain: sslcert_chain
     - require:
         - file: ssldir
 
@@ -100,15 +98,3 @@ ssl-key:
     - require:
         - file: ssldir
 {% endif %}
-
-# create ssl certificate authority for secured proxy_pass-ing
-# {% set ca_name = salt['pillar.get']('proxy_ca_name', 'nginx-gunicorn-ca') %}
-# tls.create_ca:
-#   module.run:
-#     - ca_name: '{{ca_name}}'
-#     - CN: '{{ salt['pillar.get']('nginx_server_name', 'localhost') }}'
-#     - C: 'AU'
-#     - ST: 'Victoria'
-#     - L: 'Melbourne'
-#     - O: 'MyTardis'
-#     - emailAddress: '{{ salt['pillar.get']('admin_email_address', 'admin@localhost') }}'

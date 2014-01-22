@@ -1,4 +1,13 @@
-mytardis:
+# alphabetially sorted role configuration
+base:
+  '*':
+    - roles-as-grains
+    - minion-config
+
+  'roles:master-host':
+    - match: pillar
+    - nginx
+
   'roles:mytardis':
     - match: pillar
     - mytardis
@@ -6,18 +15,22 @@ mytardis:
     - supervisor
     - postgresql-client
 
-  'roles:master-host':
+  'roles:nfs-client':
     - match: pillar
-    - nginx
+    - nfs-client
+
+  'roles:nfs-mount':
+    - match: pillar
+    - nfs-mount
+
+  'roles:nfs-server':
+    - match: pillar
+    - nfs-server
+
+  'roles:rabbitmq':
+    - match: pillar
+    - rabbitmq
 
   'roles:db-server':
     - match: pillar
     - postgresql-server
-
-  'roles:exampledata':
-    - match: pillar
-    - exampledata
-
-  'roles:redis':
-    - match: pillar
-    - redis

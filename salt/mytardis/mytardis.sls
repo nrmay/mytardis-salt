@@ -9,12 +9,21 @@ mytardis-user:
     - home: {{ pillar['mytardis_base_dir'] }}
     - groups:
         - {{ pillar['mytardis_group'] }}
+{% if pillar.get('mytardis_uid', False) %}
+    - uid: {{ pillar['mytardis_uid'] }}
+{% endif %}
+{% if pillar.get('mytardis_gid', False) %}
+    - gid: {{ pillar['mytardis_gid'] }}
+{% endif %}
     - require:
         - group: mytardis-group
 
 mytardis-group:
   group.present:
     - name: {{ pillar['mytardis_group'] }}
+{% if pillar.get('mytardis_gid', False) %}
+    - gid: {{ pillar['mytardis_gid'] }}
+{% endif %}
 
 {{ pillar['mytardis_base_dir'] }}:
   file.directory:
@@ -28,20 +37,72 @@ mytardis-group:
   pkg:
     - installed
 
+set_git_email:
+  module.run:
+    - name: git.config_set
+    - cwd: {{ pillar['mytardis_base_dir'] }}
+    - setting_name: user.email
+    - setting_value: "mytardis@mytardis.org"
+    - user: {{ pillar['mytardis_user'] }}
+    - is_global: True
+    - require:
+      - user: mytardis-user
+      - file: {{ pillar['mytardis_base_dir'] }}
+      - pkg: {{ pillar['git'] }}
+
+set_git_user_name:
+  module.run:
+    - name: git.config_set
+    - cwd: {{ pillar['mytardis_base_dir'] }}
+    - setting_name: user.name
+    - setting_value: "mytardis"
+    - user: {{ pillar['mytardis_user'] }}
+    - is_global: True
+    - require:
+      - module: set_git_email
+
+git reset --hard HEAD:
+  cmd.run:
+    - cwd: {{ mytardis_inst_dir }}
+    - user: {{ pillar['mytardis_user'] }}
+    - onlyif: ls {{ mytardis_inst_dir }}/.git
+    - require:
+      - file: mytardis-git
+
+force-branch-update:
+  cmd.run:
+{% if pillar.get('mytardis_branch', 'master') != "develop" %}
+{% set other_branch = "develop" %}
+{% else %}
+{% set other_branch = "master" %}
+{% endif %}
+    - name: git checkout {{ other_branch }} && git branch -D {{ pillar.get('mytardis_branch', 'master') }} ; git fetch && git checkout -f {{ pillar.get('mytardis_branch', 'master') }}
+    - cwd: {{ mytardis_inst_dir }}
+    - user: {{ pillar['mytardis_user'] }}
+    - require:
+      - git: mytardis-git
+
 mytardis-git:
+  file.directory:
+    - name: {{ mytardis_inst_dir }}
+    - mode: 755
+    - user: {{ pillar['mytardis_user'] }}
+    - require:
+      - file: {{ pillar['mytardis_base_dir'] }}
+      - user: mytardis-user
+
   git.latest:
     - name: "{{ pillar['mytardis_repo'] }}"
-    - rev: "{{ pillar['mytardis_branch'] }}"
+    - rev: {{ pillar.get('mytardis_branch', 'master') }}
     - target: {{ mytardis_inst_dir }}
     - force: true
     - force_checkout: true
     - always_fetch: true
     - submodules: true
-    - runas: {{ pillar['mytardis_user'] }}
+    - user: {{ pillar['mytardis_user'] }}
     - require:
-      - user: mytardis-user
-      - file.directory: {{ pillar['mytardis_base_dir'] }}
-      - pkg: {{ pillar['git'] }}
+      - module: set_git_user_name
+      - cmd: git reset --hard HEAD
 
 # install required packages for buildout.
 requirements:
@@ -98,7 +159,7 @@ buildout-cfg:
         - user: mytardis-user
         - file.directory: {{ pillar['mytardis_base_dir'] }}
     - watch:
-        - git: mytardis-git
+        - cmd: force-branch-update
 
 # create settings.py
 settings.py:
@@ -108,7 +169,7 @@ settings.py:
     - template: jinja
     - user: {{ pillar['mytardis_user'] }}
     - require:
-        - git: mytardis-git
+        - cmd: force-branch-update
         - user: mytardis-user
 
 # run shell script that builds mytardis with buildout and populates the db
@@ -120,7 +181,7 @@ bootstrap:
     - unless: ls {{ mytardis_inst_dir }}/bin/buildout
     - require:
         - file: buildout-cfg
-        - git: mytardis-git
+        - cmd: force-branch-update
         - pkg: requirements
         - file.directory: {{ pillar['mytardis_base_dir'] }}
 
@@ -134,6 +195,7 @@ locations-fixture:
         default_st_path: {{ mytardis_inst_dir }}/var/staging
     - user: {{ pillar['mytardis_user'] }}
     - watch:
+        - cmd: force-branch-update
         - git: mytardis-git
 
 load-fixtures:
@@ -153,6 +215,7 @@ django-sync-migrate:
     - user: {{ pillar['mytardis_user'] }}
     - watch:
         - file: settings.py
+        - cmd: force-branch-update
         - git: mytardis-git
         - cmd: buildout
     - require:
@@ -173,20 +236,36 @@ buildout:
     - cwd: {{ mytardis_inst_dir }}
     - user: {{ pillar['mytardis_user'] }}
     - watch:
+        - cmd: force-branch-update
         - git: mytardis-git
         - file: buildout-cfg
         - cmd: bootstrap
 
-bin/django collectstatic -l --noinput:
+{% if salt['pillar.get']('provide_staticfiles', False) %}
+static_files_directory:
+  file.directory:
+    - name: "{{ salt['pillar.get']('static_file_storage_path') }}"
+    - mode: 755
+    - user: {{ pillar['mytardis_user'] }}
+    - require:
+        - user: mytardis-user
+
+bin/django collectstatic --noinput:
   cmd.run:
     - cwd: {{ mytardis_inst_dir }}
     - user: {{ pillar['mytardis_user'] }}
     - watch:
         - file: settings.py
         - cmd: buildout
+    - require:
+        - file: static_files_directory
+{% if 'nfs-mount' in salt['pillar.get']('roles', []) and '/srv/public_data' in salt['pillar.get']('nfs-servers', []) %}
+        - mount: '/srv/public_data'
+{% endif %}
+{% endif %}
 
 # load licenses
-bin/django loaddata tardis/tardis_portal/fixtures/cc_licenses.json:
+bin/django loaddata tardis/tardis_portal/fixtures/cc_licenses.json || true:
   cmd.run:
     - cwd: {{ mytardis_inst_dir }}
     - user: {{ pillar['mytardis_user'] }}
