@@ -14,7 +14,7 @@ nginx_server_name: localhost
 {% set nginx_ssl = False %}
 nginx_ssl: {{ nginx_ssl }}
 
-mytardis_repo: "https://github.com/grischa/mytardis.git"
+mytardis_repo: "https://github.com/mytardis/mytardis.git"
 mytardis_branch: "master"
 mytardis_base_dir: "/opt/mytardis"
 
