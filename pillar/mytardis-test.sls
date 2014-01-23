@@ -2,9 +2,10 @@ roles:
   - master-host
   - mytardis
   - rabbitmq
+  - db-server
   - production
 
-{% set static_file_storage_path = '/srv/mytardis/static' %}
+{% set static_file_storage_path = '/opt/mytardis/static' %}
 {% set rabbitmq_pw = "asfdalkh42z" %}
 
 nginx_static_file_path: {{ static_file_storage_path }}
@@ -14,8 +15,13 @@ nginx_server_name: localhost
 {% set nginx_ssl = False %}
 nginx_ssl: {{ nginx_ssl }}
 
+# needed for master-less deployments
+nginx_upstream_servers:
+  - address: unix:/var/run/gunicorn/mytardis/socket
+    parameters: ""
+
 mytardis_repo: "https://github.com/mytardis/mytardis.git"
-mytardis_branch: "master"
+mytardis_branch: "develop"
 mytardis_base_dir: "/opt/mytardis"
 
 mytardis_user: "mytardis"
@@ -25,10 +31,10 @@ mytardis_db_user: "mytardis_db_user"
 mytardis_db_pass: "mytardis_db_pass"
 mytardis_db: "mytardis_db"
 
-postgres.user: "mytardis_db_user"
-postgres.pass: "mytardis_db_pass"
-postgres.host: "localhost"
-postgres.maintenance_db: 'postgres'
+postgres.host: ''
+#postgres.port: '5432'
+postgres.user: 'postgres'
+postgres.pass: ''
 
 apps:
   - tardis.apps.slideshow_view

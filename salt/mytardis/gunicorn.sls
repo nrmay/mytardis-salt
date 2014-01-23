@@ -64,8 +64,7 @@ command={{ mytardis_inst_dir}}/bin/gunicorn\n
  -b unix:{{ socketdir }}/socket\n
 {% if pillar['gunicorn_tcp_socket'] %}{% for ipaddr in salt['network.ip_addrs']() %} -b {{ ipaddr }}:8000\n{% endfor %}
 {% if pillar.get('gunicorn_ssl', False) %} --certfile {{ cert_path }}.crt\n
- --keyfile {{ cert_path }}.key\n{% endif %}{% endif %}
- wsgi:application\n\
+ --keyfile {{ cert_path }}.key\n{% endif %}{% endif %} wsgi:application\n\
 stdout_logfile=/var/log/gunicorn.log\n\
 redirect_stderr=true\n\
 "

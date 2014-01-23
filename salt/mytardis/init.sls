@@ -150,7 +150,7 @@ devtools:
 buildout-cfg:
   file.managed:
     - name: {{ mytardis_inst_dir }}/buildout-salt.cfg
-    - source: salt://templates/buildout-salt.cfg
+    - source: salt://mytardis/templates/buildout-salt.cfg
     - template: jinja
     - context:
         mytardis_dir: {{ mytardis_inst_dir }}
@@ -165,7 +165,7 @@ buildout-cfg:
 settings.py:
   file.managed:
     - name: {{ mytardis_inst_dir }}/tardis/settings.py
-    - source: salt://templates/settings.py
+    - source: salt://mytardis/templates/settings.py
     - template: jinja
     - user: {{ pillar['mytardis_user'] }}
     - require:
@@ -188,7 +188,7 @@ bootstrap:
 locations-fixture:
   file.managed:
     - name: {{ mytardis_inst_dir }}/tardis/tardis_portal/fixtures/locations.json
-    - source: salt://templates/locations.json
+    - source: salt://mytardis/templates/locations.json
     - template: jinja
     - context:
         default_fs_path: {{ mytardis_inst_dir }}/var/store
@@ -246,6 +246,7 @@ static_files_directory:
   file.directory:
     - name: "{{ salt['pillar.get']('static_file_storage_path') }}"
     - mode: 755
+    - makedirs: true
     - user: {{ pillar['mytardis_user'] }}
     - require:
         - user: mytardis-user
@@ -276,7 +277,7 @@ bin/django loaddata tardis/tardis_portal/fixtures/cc_licenses.json || true:
 {{ mytardis_inst_dir }}/wsgi.py:
   file.managed:
     - user: {{ pillar['mytardis_user'] }}
-    - source: salt://templates/wsgi.py
+    - source: salt://mytardis/templates/wsgi.py
     - require:
         - cmd.run: bootstrap
 

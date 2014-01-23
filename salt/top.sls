@@ -11,9 +11,9 @@ base:
   'roles:mytardis':
     - match: pillar
     - mytardis
-    - gunicorn
-    - supervisor
-    - postgresql-client
+    - mytardis.gunicorn
+    - mytardis.supervisor
+    - mytardis.postgresql-client
 
   'roles:nfs-client':
     - match: pillar

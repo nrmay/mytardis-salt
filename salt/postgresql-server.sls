@@ -11,6 +11,7 @@ postgresql-server:
   file.managed:
     - name: /etc/postgresql/9.1/main/pg_hba.conf
     - source: salt://templates/pg_hba.conf
+    - mode: 644
     - template: jinja
     - require:
         - pkg.installed: postgresql

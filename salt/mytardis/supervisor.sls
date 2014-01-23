@@ -8,7 +8,7 @@ supervisor:
 supervisord.conf:
   file.managed:
     - name: /etc/supervisor/supervisord.conf
-    - source: salt://templates/supervisord.conf
+    - source: salt://mytardis/templates/supervisord.conf
     - template: jinja
     - require:
         - pkg: supervisor
@@ -45,7 +45,7 @@ supervisor:
 
 /etc/init.d/supervisord:
   file.managed:
-    - source: salt://templates/init-d-supervisord
+    - source: salt://mytardis/templates/init-d-supervisord
     - mode: 750
     - require:
         - file: /etc/sysconfig/supervisord
