@@ -6,6 +6,7 @@ salt-pip-prereqs:
         - swig
 {% if grains['os_family'] == 'Debian' %}
         - python-dev
+        - libssl-dev
 {% else %}
         - python-devel
 {% endif %}

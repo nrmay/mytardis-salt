@@ -27,7 +27,7 @@ mytardis_base_dir: "/opt/mytardis"
 mytardis_user: "mytardis"
 mytardis_group: "mytardis"
 
-mytardis_db_user: "mytardis_db_user"
+mytardis_db_user: "mytardis"
 mytardis_db_pass: "mytardis_db_pass"
 mytardis_db: "mytardis_db"
 

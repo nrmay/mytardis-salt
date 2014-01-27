@@ -157,7 +157,7 @@ buildout-cfg:
     - user: {{ pillar['mytardis_user'] }}
     - require:
         - user: mytardis-user
-        - file.directory: {{ pillar['mytardis_base_dir'] }}
+        - file: {{ pillar['mytardis_base_dir'] }}
     - watch:
         - cmd: force-branch-update
 
@@ -183,7 +183,7 @@ bootstrap:
         - file: buildout-cfg
         - cmd: force-branch-update
         - pkg: requirements
-        - file.directory: {{ pillar['mytardis_base_dir'] }}
+        - file: {{ pillar['mytardis_base_dir'] }}
 
 locations-fixture:
   file.managed:
@@ -279,7 +279,7 @@ bin/django loaddata tardis/tardis_portal/fixtures/cc_licenses.json || true:
     - user: {{ pillar['mytardis_user'] }}
     - source: salt://mytardis/templates/wsgi.py
     - require:
-        - cmd.run: bootstrap
+        - cmd: bootstrap
 
 celery-supervisor:
   file.accumulated:

@@ -14,7 +14,7 @@ postgresql-server:
     - mode: 644
     - template: jinja
     - require:
-        - pkg.installed: postgresql
+        - pkg: postgresql
 {% endif %}
 
   service:

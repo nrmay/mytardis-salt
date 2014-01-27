@@ -7,7 +7,11 @@ supervisor:
 
 supervisord.conf:
   file.managed:
+{% if grains['os_family'] == 'Debian' %}
     - name: /etc/supervisor/supervisord.conf
+{% else %}
+    - name: /etc/supervisord.conf
+{% endif %}
     - source: salt://mytardis/templates/supervisord.conf
     - template: jinja
     - require:

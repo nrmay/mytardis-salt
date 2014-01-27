@@ -3,7 +3,7 @@ mytardis_db_user:
     - name: {{ pillar['mytardis_db_user'] }}
     - password: {{ pillar['mytardis_db_pass'] }}
     - require:
-        - pkg.installed: postgresql-client
+        - pkg: postgresql-client
 
 mytardis_db:
   postgres_database.present:

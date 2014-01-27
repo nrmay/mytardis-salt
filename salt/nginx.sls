@@ -51,17 +51,17 @@ nginx:
     - context:
       static_files_dir: "{{ pillar['nginx_static_file_path'] }}"
     - require:
-      - pkg.installed: nginx
+      - pkg: nginx
 
 service nginx reload:
   cmd.run:
     - watch:
 {% if grains['os_family'] == "Debian" %}
-      - file.symlink: /etc/nginx/sites-enabled/mytardis.conf
-      - file.absent: /etc/nginx/sites-enabled/default
+      - file: /etc/nginx/sites-enabled/mytardis.conf
+      - file: /etc/nginx/sites-enabled/default
 {% elif grains['os_family'] == "RedHat" %}
       - file: /etc/nginx/conf.d/mytardis.conf
-      - file.absent: /etc/nginx/conf.d/default.conf
+      - file: /etc/nginx/conf.d/default.conf
 {% endif %}
 
 # open firewall
