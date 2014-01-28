@@ -11,6 +11,7 @@ roles:
 nginx_static_file_path: {{ static_file_storage_path }}
 
 nginx_server_name: localhost
+nginx_strict_name_checking: False
 
 {% set nginx_ssl = False %}
 nginx_ssl: {{ nginx_ssl }}
