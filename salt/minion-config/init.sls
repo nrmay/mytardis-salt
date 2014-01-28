@@ -14,7 +14,12 @@ salt-pip-prereqs:
 {% if grains['os_family'] != 'RedHat' %}
 salt:
   pip.installed:
-    - name: salt=={{ salt['pillar.get']('salt_version', '0.17.0') }}
+{% if pillar.get('salt_install_type', 'stable') == 'git' %}
+    - name: salt
+    - editable: "git+https://github.com/saltstack/salt.git@{{ pillar.get('salt_version', '0.17.4') }}#egg=salt"
+{% else %}
+    - name: salt=={{ salt['pillar.get']('salt_version', '0.17.4') }}
+{% endif %}
     - upgrade: True
     - require:
         - pkg: salt-pip-prereqs

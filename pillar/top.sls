@@ -1,6 +1,7 @@
 base:
   '*':
+    # globally required
     - global_settings
     - packages
-  'testing':
+    # installation specific
     - mytardis-test
