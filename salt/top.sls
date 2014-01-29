@@ -2,7 +2,7 @@
 base:
   '*':
     - roles-as-grains
-    - minion-config
+#    - minion-config
 
   'roles:master-host':
     - match: pillar
