@@ -56,7 +56,7 @@ supervisor:
 
 /etc/sysconfig/supervisord:
   file.managed:
-    - source: salt://templates/sysconfig-supervisord
+    - source: salt://mytardis/templates/sysconfig-supervisord
 
 chkconfig --add supervisord:
   cmd.run:
@@ -67,7 +67,7 @@ chkconfig --add supervisord:
 supervisord.conf:
   file.managed:
     - name: /etc/supervisord.conf
-    - source: salt://templates/supervisord.conf
+    - source: salt://mytardis/templates/supervisord.conf
     - template: jinja
     - require:
         - pip: supervisor
