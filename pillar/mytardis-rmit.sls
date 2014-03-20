@@ -3,7 +3,6 @@ roles:
   - mysql-client
   - mytardis
   - rabbitmq
-  - production
 
 {% set static_file_storage_path = '/opt/mytardis/static' %}
 {% set rabbitmq_pw = "asfdalkh42z" %}
