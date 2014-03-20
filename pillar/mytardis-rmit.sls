@@ -32,20 +32,19 @@ mytardis_db: mytardis
 mytardis_db_user: 'mytardis'
 mytardis_db_engine: 'django.db.backends.mysql'
 mytardis_db_port: 3306
-mytardis_db_pass: 'dtofaam123'
-mytardis_db_host: '115.146.92.137'
+mytardis_db_pass: ''
+mytardis_db_host: ''
 
-mysql_user: 'root'
-mysql_pass: 'dtofaam123'
+mysql_user: ''
+mysql_pass: ''
 
 # mysql
 # engine: 'django.db.backends.mysql'
 # port: '3306'
 
 # postgresql
-#postgres.port: '5432'
-#postgres.user: 'postgres'
-#postgres.pass: ''
+# port: '5432'
+# engine: 'django.db.backends.postgresql_psycopg2'
 
 apps:
   - tardis.apps.slideshow_view
