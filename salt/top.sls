@@ -2,7 +2,7 @@
 base:
   '*':
     - roles-as-grains
-#    - minion-config
+    - minion-config
 
   'roles:master-host':
     - match: pillar
@@ -15,9 +15,11 @@ base:
     - mytardis.supervisor
     
   'roles:mysql-client':
+    - match: pillar
     - mytardis.mysql-client
     
   'roles:postgresql-client':
+    - match: pillar
     - mytardis.postgresql-client
 
   'roles:nfs-client':

@@ -1,5 +1,6 @@
 roles:
   - master-host
+  - mysql-client
   - mytardis
   - rabbitmq
   - production
@@ -31,11 +32,11 @@ mytardis_db: mytardis
 mytardis_db_user: 'mytardis'
 mytardis_db_engine: 'django.db.backends.mysql'
 mytardis_db_port: 3306
-mytardis_db_pass: ''
-mytardis_db_host: ''
+mytardis_db_pass: 'dtofaam123'
+mytardis_db_host: '115.146.92.137'
 
-mysql_user: ''
-mysql_pass: ''
+mysql_user: 'root'
+mysql_pass: 'dtofaam123'
 
 # mysql
 # engine: 'django.db.backends.mysql'
