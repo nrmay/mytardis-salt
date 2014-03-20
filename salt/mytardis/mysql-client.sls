@@ -4,7 +4,7 @@ mysql_pkgs:
       - mysql
       - MySQL-python
 
-mytardis-user:
+mytardis-db-user:
   mysql_user.present:
     - name: {{ pillar['mytardis_db_user'] }}
     - host: '%'
@@ -12,13 +12,13 @@ mytardis-user:
     - require:
       - pkg: MySQL-python  
 
-mytardis-database:
+mytardis-db-database:
   mysql_database.present:
     - name: {{ pillar['mytardis_db'] }}
     - require:
       - pkg: MySQL-python
       
-mytardis-grants:
+mytardis-db-grants:
   mysql_grants.present:
     - grant: all
     - database: {{ pillar['mytardis_db'] }}.*
