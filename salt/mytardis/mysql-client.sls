@@ -4,17 +4,21 @@ mysql_pkgs:
       - mysql
       - MySQL-python
 
-mytardis:
-  mysql_database.present:
-    - name:     {{ pillar['mytardis_db'] }}
-    - require:
-      - pkg: mysql_pkgs
+mytardis-user:
   mysql_user.present:
-    - name:     {{ pillar['mytardis_db_user'] }}
-    - host:     '%'
+    - name: {{ pillar['mytardis_db_user'] }}
+    - host: '%'
     - password: {{ pillar['mytardis_db_pass'] }}
     - require:
-      - pkg: mysql_pkgs
+      - pkg: MySQL-python  
+
+mytardis-database:
+  mysql_database.present:
+    - name: {{ pillar['mytardis_db'] }}
+    - require:
+      - pkg: MySQL-python
+      
+mytardis-grants:
   mysql_grants.present:
     - grant: all
     - database: {{ pillar['mytardis_db'] }}.*
@@ -22,6 +26,7 @@ mytardis:
     - host:     '%'
     - password: {{ pillar['mytardis_db_pass'] }}
     - require:
-      - mysql_user: {{ pillar['mytardis_db_user'] }}  
+      - mysql_user: {{ pillar['mytardis_db_user'] }}
+      - mysql_database: {{ pillar['mytardis_db'] }}  
 
  
