@@ -20,7 +20,7 @@ nginx_upstream_servers:
   - address: unix:/var/run/gunicorn/mytardis/socket
     parameters: ""
 
-mytardis_repo: "https://github.com/mytardis/mytardis.git"
+mytardis_repo: "https://github.com/nrmay/mytardis.git"
 mytardis_branch: "develop"
 mytardis_base_dir: "/opt/mytardis"
 
