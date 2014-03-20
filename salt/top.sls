@@ -13,6 +13,11 @@ base:
     - mytardis
     - mytardis.gunicorn
     - mytardis.supervisor
+    
+  'roles:mysql-client':
+    - mytardis.mysql-client
+    
+  'roles:postgresql-client':
     - mytardis.postgresql-client
 
   'roles:nfs-client':

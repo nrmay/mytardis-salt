@@ -4,4 +4,4 @@ base:
     - global_settings
     - packages
     # installation specific
-    - mytardis-test
+    - mytardis-rmit
