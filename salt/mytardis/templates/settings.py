@@ -8,8 +8,13 @@ DATABASES = {
         'PASSWORD': "{{ pillar['mytardis_db_pass'] }}",
         'HOST':     "{{ pillar['mytardis_db_host'] }}",
         'PORT':     "{{ pillar['mytardis_db_port'] }}",
-{% if pillar['mytardis_db_engine'] == 'django.db.backends.mysql' %}
-        'OPTIONS': { "init_command": "SET storage_engine=MYISAM", },
+{% if pillar['mytardis_db_engine'] == 'django.db.backends.mysql' %} 
+        'STORAGE_ENGINE': 'MyISAM',
+        'OPTIONS': {
+            'init_command': 'SET storage_engine=MyISAM',
+            'charset':      'utf8mb4',
+            'use_unicode':  True,
+        },
 {% endif %}
     }
 }
