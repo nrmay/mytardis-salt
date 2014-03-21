@@ -12,7 +12,7 @@ DATABASES = {
         'STORAGE_ENGINE': 'MyISAM',
         'OPTIONS': {
             'init_command': 'SET storage_engine=MyISAM',
-            'charset':      'utf8mb4',
+            'charset':      'utf8',
             'use_unicode':  True,
         },
 {% endif %}
