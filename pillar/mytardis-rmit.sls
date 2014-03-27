@@ -52,8 +52,10 @@ apps:
 static_file_storage_path: {{ static_file_storage_path }}
 
 django_settings:
+  - "SITE_TITLE = 'myTardis'"
+  - "SPONSORED_TEXT = 'Deployed using SaltStack.'"
+  - "DEFAULT_INSTITUTION = 'RMIT University'"
   - "LANGUAGE_CODE = 'en-au'"
-  - "DEFAULT_INSTITUTION = 'Monash University'"
   - "DEEP_DATASET_STORAGE = True"
   - 'DATASET_VIEWS = [("http://www.tardis.edu.au/schemas/trdDataset/2",
                        "tardis.apps.slideshow_view.views.view_full_dataset"),'
@@ -84,8 +86,6 @@ django_settings:
   - "ALLOWED_HOSTS = ['*',]"
   - "STATIC_ROOT = '{{ static_file_storage_path }}'"
   - "REGISTRATION_OPEN = False"
-  - "SITE_TITLE = 'MyTardis Salt Example Site'"
-  - "SPONSORED_TEXT = 'Deployed using SaltStack. Please customise for your site.'"
 
 secret_key: 'bv$2h+s#&718g2&-e18m-i1qf*5%%^-_34x0l640ryfw9$x$la'
 
