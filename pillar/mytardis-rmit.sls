@@ -48,6 +48,7 @@ mysql_pass: ''
 apps:
   - tardis.apps.slideshow_view
   - tardis.apps.deep_storage_download_mapper
+  - cas_provider
 
 static_file_storage_path: {{ static_file_storage_path }}
 
@@ -55,6 +56,9 @@ django_settings:
   - "SITE_TITLE = 'myTardis'"
   - "SPONSORED_TEXT = 'Deployed using SaltStack.'"
   - "DEFAULT_INSTITUTION = 'RMIT University'"
+  - "LOGIN_URL = '/cas/login/'"
+  - "LOGOUT_URL = '/cas/logout/'"
+  - "CAS_AUTO_REDIRECT_AFTER_LOGOUT = True"
   - "LANGUAGE_CODE = 'en-au'"
   - "DEEP_DATASET_STORAGE = True"
   - 'DATASET_VIEWS = [("http://www.tardis.edu.au/schemas/trdDataset/2",
