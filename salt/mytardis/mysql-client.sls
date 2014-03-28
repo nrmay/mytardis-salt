@@ -10,7 +10,8 @@ mytardis-db-user:
     - host: '%'
     - password: {{ pillar['mytardis_db_pass'] }}
     - require:
-      - pkg: MySQL-python  
+      - pkg: mysql
+      - pkg: MySQL-python
 
 mytardis-db-database:
   mysql_database.present:
@@ -28,5 +29,3 @@ mytardis-db-grants:
     - require:
       - mysql_user: {{ pillar['mytardis_db_user'] }}
       - mysql_database: {{ pillar['mytardis_db'] }}  
-
- 
