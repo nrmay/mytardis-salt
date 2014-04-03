@@ -10,5 +10,5 @@ mysql.host: {{ pillar['mytardis_db_host'] }}
 mysql.port: {{ pillar['mytardis_db_port'] }}
 mysql.user: {{ pillar['mysql_user'] }}
 mysql.pass: {{ pillar['mysql_pass'] }}
-#mysql.unix_socket: '/tmp/mysql.sock'
+mysql.unix_socket: '/tmp/mysql.sock'
 mysql.charset: 'utf8'
