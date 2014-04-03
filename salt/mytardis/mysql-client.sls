@@ -1,4 +1,4 @@
-mysql_pkgs:
+mysql-pkgs:
   pkg.installed:
     - names:
       - mysql
@@ -8,7 +8,12 @@ mysql-db:
   mysql_database.present:
     - name: mysql
     - requires:
-      - pkg: mysql_pkgs
+      - pkg: mysql-pkgs
+{% if pillar['mytardis_db_host'] == 'localhost' %} 
+    - watch:
+      - cmd: mysql-root
+{% endif %}
+      
 
 mytardis-db-user:
   mysql_user.present:
@@ -16,14 +21,13 @@ mytardis-db-user:
     - host: '%'
     - password: {{ pillar['mytardis_db_pass'] }}
     - require:
-      - pkg: mysql
-      - pkg: MySQL-python
+      - pkg: mysql-pkgs
 
 mytardis-db-database:
   mysql_database.present:
     - name: {{ pillar['mytardis_db'] }}
     - require:
-      - pkg: MySQL-python
+      - pkg: mysql-pkgs
       
 mytardis-db-grants:
   mysql_grants.present:

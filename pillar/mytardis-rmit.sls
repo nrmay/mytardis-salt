@@ -33,7 +33,7 @@ mytardis_db_user: 'mytardis'
 mytardis_db_engine: 'django.db.backends.mysql'
 mytardis_db_port: 3306
 mytardis_db_pass: ''
-mytardis_db_host: ''
+mytardis_db_host: 'localhost'
 
 mysql_user: ''
 mysql_pass: ''
