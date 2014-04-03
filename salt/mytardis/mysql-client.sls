@@ -3,6 +3,12 @@ mysql_pkgs:
     - names:
       - mysql
       - MySQL-python
+      
+mysql-db:
+  mysql_database.present:
+    - name: mysql
+    - requires:
+      - pkg: mysql_pkgs
 
 mytardis-db-user:
   mysql_user.present:

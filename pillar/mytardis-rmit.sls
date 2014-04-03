@@ -1,5 +1,6 @@
 roles:
   - master-host
+  - mysql-server
   - mysql-client
   - mytardis
   - rabbitmq
@@ -48,7 +49,7 @@ mysql_pass: ''
 apps:
   - tardis.apps.slideshow_view
   - tardis.apps.deep_storage_download_mapper
-  - cas_provider
+#  - cas_provider
 
 static_file_storage_path: {{ static_file_storage_path }}
 
