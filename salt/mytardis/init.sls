@@ -213,6 +213,12 @@ django-sync-migrate:
     - name: bin/django syncdb --noinput --migrate
     - cwd: {{ mytardis_inst_dir }}
     - user: {{ pillar['mytardis_user'] }}
+{% if pillar['mytardis_db_engine'] == 'django.db.backends.mysql' %}
+    - connection_user: {{ pillar['mysql_user'] }}
+    - connection_pass: {{ pillar['mysql_pass'] }}
+    - connection_host: {{ pillar['mytardis_db_host'] }}
+    - connection_port: {{ pillar['mytardis_db_port'] }}
+{% endif %}    
     - watch:
         - file: settings.py
         - cmd: force-branch-update
