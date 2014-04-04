@@ -227,6 +227,7 @@ django-sync-migrate:
     - require:
 {% if pillar['mytardis_db_engine'] == 'django.db.backends.mysql' %}
         - mysql_database: {{ pillar['mytardis_db'] }}
+        - mysql_grants: mytardis-db-grants
 {% else %}
         - postgres_database: {{ pillar['mytardis_db'] }}
 {% endif %}
