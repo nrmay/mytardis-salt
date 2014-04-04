@@ -8,10 +8,10 @@ mysql-pkgs:
   pkg.installed:
     - names:
 {% if grains['os_family'] == 'Debian' %}
-    - name: python-mysqldb
+      - python-mysqldb
 {% else %}
-    - mysql
-    - MySQL-python
+      - mysql
+      - MySQL-python
 {% endif %}
       
 # check msql db
@@ -25,6 +25,9 @@ mysql-db:
     - connection_port: {{ pillar['mytardis_db_port'] }}
     - requires:
       - pkg: mysql-pkgs
+{% if 'mysql-server' in grains['roles'] %}
+      - mysql_user: mysql-root
+{% endif %
 
 # create user
 # -----------
