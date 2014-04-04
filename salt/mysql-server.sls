@@ -31,7 +31,7 @@ mysql-service:
       
 # create user
 # -----------
-mysql-user:
+mysql-root:
   mysql_user.present:
     - name: {{ pillar['mysql_user'] }}
     - password: {{ pillar['mysql_pass'] }}
