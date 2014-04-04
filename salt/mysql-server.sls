@@ -11,7 +11,7 @@ mysql-server-pkgs:
 {% if grains['os_family'] == 'Debian' %}
       - python-mysqldb
 {% else %}
-      - mysql
+ #     - mysql
       - MySQL-python
 {% endif %}
 
@@ -42,13 +42,5 @@ mysql-user:
 {% endif %}
     - require:
       - service: mysql-service
-  
-# update root password
-# --------------------      
-#mysql-root:
-#  cmd.run:
-#    - name: /usr/bin/mysqladmin -u {{ pillar['mysql_user'] }} password '{{ pillar['mysql_pass'] }}'
-#    - require:
-#      - service: mysql-service
    
 # --- end of file --- #

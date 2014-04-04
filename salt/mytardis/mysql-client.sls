@@ -10,26 +10,10 @@ mysql-pkgs:
 {% if grains['os_family'] == 'Debian' %}
       - python-mysqldb
 {% else %}
-      - mysql
+#      - mysql
       - MySQL-python
 {% endif %}
-      
-# check msql db
-# -------------
-mysql-db:
-  mysql_database.present:
-    - name: mysql
-    - user: {{ pillar['mysql_user'] }}
-    - password: {{ pillar['mysql_pass]' }}
-    - connection_user: {{ pillar['mysql_user'] }}
-    - connection_pass: {{ pillar['mysql_pass'] }}
-    - connection_host: {{ pillar['mytardis_db_host'] }}
-    - connection_port: {{ pillar['mytardis_db_port'] }}
-    - requires:
-      - pkg: mysql-pkgs
-{% if 'mysql-server' in pillar['roles'] %}
-      - mysql_user: mysql-root
-{% endif %}
+
 
 # create user
 # -----------
@@ -37,6 +21,10 @@ mytardis-db-user:
   mysql_user.present:
     - name: {{ pillar['mytardis_db_user'] }}
     - password: {{ pillar['mytardis_db_pass'] }}
+    - connection_user: {{ pillar['mysql_user'] }}
+    - connection_pass: {{ pillar['mysql_pass'] }}
+    - connection_host: {{ pillar['mytardis_db_host'] }}
+    - connection_port: {{ pillar['mytardis_db_port'] }}
 {% if pillar['mytardis_db_host'] == 'localhost' %} 
     - host: 'localhost'
 {% else %}
@@ -44,14 +32,23 @@ mytardis-db-user:
 {% endif %}
     - require:
       - pkg: mysql-pkgs
+{% if 'mysql-server' in pillar['roles'] %}
+      - mysql_user: mysql-root
+{% endif %}
+
 
 # create database
 # ---------------
 mytardis-db-database:
   mysql_database.present:
     - name: {{ pillar['mytardis_db'] }}
+    - connection_user: {{ pillar['mysql_user'] }}
+    - connection_pass: {{ pillar['mysql_pass'] }}
+    - connection_host: {{ pillar['mytardis_db_host'] }}
+    - connection_port: {{ pillar['mytardis_db_port'] }}
     - require:
       - pkg: mysql-pkgs
+      
       
 # create grants
 # -------------
@@ -66,8 +63,13 @@ mytardis-db-grants:
 {% else %}
     - host: '%'  
 {% endif %}
+    - connection_user: {{ pillar['mysql_user'] }}
+    - connection_pass: {{ pillar['mysql_pass'] }}
+    - connection_host: {{ pillar['mytardis_db_host'] }}
+    - connection_port: {{ pillar['mytardis_db_port'] }}
     - require:
       - mysql_user: {{ pillar['mytardis_db_user'] }}
       - mysql_database: {{ pillar['mytardis_db'] }}  
+
 
 # --- end of file --- # 
