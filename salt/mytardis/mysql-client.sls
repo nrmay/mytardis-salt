@@ -10,7 +10,7 @@ mysql-pkgs:
 {% if grains['os_family'] == 'Debian' %}
       - python-mysqldb
 {% else %}
-#      - mysql
+      - mysql
       - MySQL-python
 {% endif %}
 
@@ -21,10 +21,6 @@ mytardis-db-user:
   mysql_user.present:
     - name: {{ pillar['mytardis_db_user'] }}
     - password: {{ pillar['mytardis_db_pass'] }}
-    - connection_user: {{ pillar['mysql_user'] }}
-    - connection_pass: {{ pillar['mysql_pass'] }}
-    - connection_host: {{ pillar['mytardis_db_host'] }}
-    - connection_port: {{ pillar['mytardis_db_port'] }}
 {% if pillar['mytardis_db_host'] == 'localhost' %} 
     - host: 'localhost'
 {% else %}
@@ -42,10 +38,6 @@ mytardis-db-user:
 mytardis-db-database:
   mysql_database.present:
     - name: {{ pillar['mytardis_db'] }}
-    - connection_user: {{ pillar['mysql_user'] }}
-    - connection_pass: {{ pillar['mysql_pass'] }}
-    - connection_host: {{ pillar['mytardis_db_host'] }}
-    - connection_port: {{ pillar['mytardis_db_port'] }}
     - require:
       - pkg: mysql-pkgs
       
@@ -56,17 +48,13 @@ mytardis-db-grants:
   mysql_grants.present:
     - grant: all
     - database: {{ pillar['mytardis_db'] }}.*
-    - user:     {{ pillar['mytardis_db_user'] }}
+    - user: {{ pillar['mytardis_db_user'] }}
     - password: {{ pillar['mytardis_db_pass'] }}
 {% if pillar['mytardis_db_host'] == 'localhost' %} 
     - host: 'localhost'
 {% else %}
     - host: '%'  
 {% endif %}
-    - connection_user: {{ pillar['mysql_user'] }}
-    - connection_pass: {{ pillar['mysql_pass'] }}
-    - connection_host: {{ pillar['mytardis_db_host'] }}
-    - connection_port: {{ pillar['mytardis_db_port'] }}
     - require:
       - mysql_user: {{ pillar['mytardis_db_user'] }}
       - mysql_database: {{ pillar['mytardis_db'] }}  

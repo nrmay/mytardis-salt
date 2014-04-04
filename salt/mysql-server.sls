@@ -11,7 +11,7 @@ mysql-server-pkgs:
 {% if grains['os_family'] == 'Debian' %}
       - python-mysqldb
 {% else %}
- #     - mysql
+      - mysql
       - MySQL-python
 {% endif %}
 
