@@ -19,13 +19,15 @@ mysql-pkgs:
 mysql-db:
   mysql_database.present:
     - name: mysql
+    - user: {{ pillar['mysql_user'] }}
+    - password: {{ pillar['mysql_pass]' }}
     - connection_user: {{ pillar['mysql_user'] }}
     - connection_pass: {{ pillar['mysql_pass'] }}
     - connection_host: {{ pillar['mytardis_db_host'] }}
     - connection_port: {{ pillar['mytardis_db_port'] }}
     - requires:
       - pkg: mysql-pkgs
-{% if 'mysql-server' in grains['roles'] %}
+{% if 'mysql-server' in pillar['roles'] %}
       - mysql_user: mysql-root
 {% endif %}
 
