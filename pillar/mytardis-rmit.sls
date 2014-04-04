@@ -92,8 +92,6 @@ django_settings:
   - "STATIC_ROOT = '{{ static_file_storage_path }}'"
   - "REGISTRATION_OPEN = False"
 
-secret_key: 'bv$2h+s#&718g2&-e18m-i1qf*5%%^-_34x0l640ryfw9$x$la'
-
 gunicorn_tcp_socket: false
 gunicorn_ssl: false
 

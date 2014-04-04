@@ -27,7 +27,7 @@ mysql-db:
       - pkg: mysql-pkgs
 {% if 'mysql-server' in grains['roles'] %}
       - mysql_user: mysql-root
-{% endif %
+{% endif %}
 
 # create user
 # -----------
