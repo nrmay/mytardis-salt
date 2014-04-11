@@ -79,6 +79,7 @@ supervisor-service-start:
         - file: /etc/supervisord.conf
         - file: {{ mytardis_inst_dir }}/wsgi.py
         - cmd: supervisorctl stop all
+        - cmd: chkconfig --add supervisord
 
 supervisorctl stop all:
   cmd.run:
