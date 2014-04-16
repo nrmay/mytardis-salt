@@ -15,6 +15,19 @@ mysql-server-pkgs:
       - MySQL-python
 {% endif %}
 
+
+# create user
+# -----------
+mysql:
+  user.present:
+    - name: mysql
+    - group: mysql
+    - system: True
+  group.present:
+    - name: mysql
+  requires:
+    - pkg: mysql-server-pkgs  
+
       
 # run service
 # -----------
