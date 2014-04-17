@@ -5,6 +5,16 @@ nginx:
     - running
 
 {% if grains['os_family'] == "RedHat" %}
+nginx-user:
+  user.present:
+    - name: nginx
+    - group: nginx
+    - system: True
+  group.present:
+    - name: nginx
+  require:
+    - pkg: nginx
+
 /etc/nginx/nginx.conf:
   file.sed:
     - before: "worker_processes  1"
