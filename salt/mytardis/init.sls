@@ -130,7 +130,7 @@ requirements:
       - ImageMagick
       - postgresql-devel
       - graphviz-devel
-{% if grains['os'] == "RedHat" %}
+{% if grains['os'] == "RedHat" and grains['osrelease'] < '6.5' %}
       - compat-libevent14-devel
 {% else %}
       - libevent-devel

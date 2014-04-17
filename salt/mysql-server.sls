@@ -25,7 +25,7 @@ mysql:
     - system: True
   group.present:
     - name: mysql
-  requires:
+  require:
     - pkg: mysql-server-pkgs  
 
       

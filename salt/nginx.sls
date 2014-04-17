@@ -36,7 +36,6 @@ nginx-user:
     - require:
         - pkg: nginx
 
-
 /etc/nginx/sites-enabled/mytardis.conf:
   file.symlink:
     - target: /etc/nginx/sites-available/mytardis.conf
