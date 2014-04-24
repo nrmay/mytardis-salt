@@ -25,6 +25,7 @@ mytardis-db-user:
     - connection_pass: {{ pillar['mysql_pass'] }}
     - connection_host: {{ pillar['mytardis_db_host'] }}
     - connection_port: {{ pillar['mytardis_db_port'] }}
+    - connection_socket: {{ pillar['mysql_socket'] }}
 {% if pillar['mytardis_db_host'] == 'localhost' %} 
     - host: 'localhost'
 {% else %}
@@ -46,9 +47,9 @@ mytardis-db-database:
     - connection_pass: {{ pillar['mysql_pass'] }}
     - connection_host: {{ pillar['mytardis_db_host'] }}
     - connection_port: {{ pillar['mytardis_db_port'] }}
+    - connection_socket: {{ pillar['mysql_socket'] }}
     - require:
-      - pkg: mysql-pkgs
-      
+      - pkg: mysql-pkgs      
       
 # create grants
 # -------------
@@ -67,6 +68,7 @@ mytardis-db-grants:
     - connection_pass: {{ pillar['mysql_pass'] }}
     - connection_host: {{ pillar['mytardis_db_host'] }}
     - connection_port: {{ pillar['mytardis_db_port'] }}
+    - connection_socket: {{ pillar['mysql_socket'] }}
     - require:
       - mysql_user: {{ pillar['mytardis_db_user'] }}
       - mysql_database: {{ pillar['mytardis_db'] }}  

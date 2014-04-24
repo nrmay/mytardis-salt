@@ -18,7 +18,7 @@ mysql-server-pkgs:
 
 # create user
 # -----------
-mysql:
+mysql-user:
   user.present:
     - name: mysql
     - group: mysql
@@ -40,7 +40,7 @@ mysql-service:
 {% endif %}
     - require:
       - pkg: mysql-server
-   
+      - user: mysql-user
       
 # create user
 # -----------

@@ -37,6 +37,7 @@ mytardis_db_host: 'localhost'
 
 mysql_user: 'root'
 mysql_pass: ''
+mysql_socket: '/var/lib/mysql/mysql.sock'
 
 # mysql
 # engine: 'django.db.backends.mysql'
