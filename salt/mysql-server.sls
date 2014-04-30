@@ -40,7 +40,7 @@ mysql-service:
 {% endif %}
     - require:
       - pkg: mysql-server
-      - user: mysql-user
+#      - user: mysql-user
       
 # create user
 # -----------
