@@ -18,15 +18,14 @@ mysql-server-pkgs:
 
 # create user
 # -----------
-#mysql-user:
-#  user.present:
-#    - name: mysql
-#    - group: mysql
-#    - system: True
-#  group.present:
-#    - name: mysql
-#  require:
-#    - pkg: mysql-server-pkgs  
+mysql-user:
+  user.present:
+    - name: mysql
+    - group: mysql
+  group.present:
+    - name: mysql
+  require:
+    - pkg: mysql-server-pkgs  
 
       
 # run service
@@ -40,7 +39,7 @@ mysql-service:
 {% endif %}
     - require:
       - pkg: mysql-server
-#      - user: mysql-user
+      - user: mysql-user
       
 # create user
 # -----------
