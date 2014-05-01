@@ -1,8 +1,6 @@
-rabbitmq-server:
-  pkg.installed: []
-  service.running:
-    - require:
-      - pkg: rabbitmq-server
+rabbitmq-pkg:
+  pkg.installed: 
+    - name: rabbitmq-server
 
 {{ pillar['rabbitmq-user'] }}:
   rabbitmq_user.present:
@@ -17,6 +15,12 @@ rabbitmq-server:
     - runas: root
     - require:
       - file: /etc/rabbitmq/rabbitmq.config
+
+rabbitmq-server:
+  service.running:
+    - require:
+      - pkg: rabbitmq-server
+      - user: rabbitmq_user
 
 {{ pillar['rabbitmq-vhost'] }}:
   rabbitmq_vhost.present:

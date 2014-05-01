@@ -18,14 +18,19 @@ mysql-server-pkgs:
 
 # create user
 # -----------
-mysql-user:
-  user.present:
-    - name: mysql
-    - group: mysql
+mysql-group:
   group.present:
     - name: mysql
   require:
     - pkg: mysql-server-pkgs  
+      
+mysql-user:
+  user.present:
+    - name: mysql
+    - group: mysql
+    - system: True
+  require:
+    - group: mysql  
 
       
 # run service
