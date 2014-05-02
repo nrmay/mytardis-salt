@@ -1,9 +1,19 @@
+{% if grains['os'] == 'RedHat' %}
+rabbitmq:
+  group.present: []
+  user.present:
+    - system: True
+    - gid: rabbitmq
+{% endif %}
+
 rabbitmq-server:
   pkg.installed: []
   service.running: 
     - require:
       - pkg: rabbitmq-server
-
+{% if grains['os'] == 'RedHat' %}
+      - user: rabbitmq
+{% endif %}
 
 {{ pillar['rabbitmq-user'] }}:
   rabbitmq_user.present:
