@@ -49,7 +49,11 @@ mytardis-db-database:
     - connection_port: {{ pillar['mytardis_db_port'] }}
     - connection_socket: {{ pillar['mysql_socket'] }}
     - require:
-      - pkg: mysql-pkgs      
+      - pkg: mysql-pkgs    
+{% if 'mysql-server' in pillar['roles'] %}
+      - mysql_user: mysql-root
+{% endif %}
+  
       
 # create grants
 # -------------

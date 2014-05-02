@@ -27,11 +27,22 @@ mysql-group:
 mysql-user:
   user.present:
     - name: mysql
-    - group: mysql
+    - gid: mysql
     - system: True
   require:
     - group: mysql  
 
+
+# check folder permissions
+# ------------------------
+{% if grains['os'] == 'RedHat' %}
+/var/run/mysqld:
+  file.directory:
+    - user: mysql
+    - require:
+      - user: mysql
+{% endif %}
+      
       
 # run service
 # -----------
@@ -45,7 +56,22 @@ mysql-service:
     - require:
       - pkg: mysql-server
       - user: mysql-user
+{% if grains['os'] == 'RedHat' %}
+      - file: /var/run/mysqld
+{% endif %}
       
+      
+# set initial password  
+# --------------------
+{% if grains['os'] == 'RedHat' %}
+mysql-root-pass:
+  cmd.run:
+    - name: mysqladmin -u {{ pillar['mysql_user'] }} password {{ pillar['mysql_pass'] }}
+    - require:
+      - service: mysql-service
+{% endif %}
+      
+           
 # create user
 # -----------
 mysql-root:
@@ -59,5 +85,8 @@ mysql-root:
 {% endif %}
     - require:
       - service: mysql-service
+{% if grains['os'] == 'RedHat' %}
+      - cmd: mysql-root-pass
+{% endif %}
    
 # --- end of file --- #
