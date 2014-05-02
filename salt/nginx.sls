@@ -1,20 +1,25 @@
+{% if grains['os_family'] == "RedHat" %}
+nginx-user:
+  group.present:
+    - name: nginx
+  user.present:
+    - name: nginx
+    - gid: nginx
+    - system: True
+{% endif %}
+
 nginx:
   pkg:
     - installed
   service:
     - running
+{% if grains['os_family'] == "RedHat" %}
+    - require:
+      - user: nginx
+{% endif %}
+      
 
 {% if grains['os_family'] == "RedHat" %}
-nginx-user:
-  user.present:
-    - name: nginx
-    - group: nginx
-    - system: True
-  group.present:
-    - name: nginx
-  require:
-    - pkg: nginx
-
 /etc/nginx/nginx.conf:
   file.sed:
     - before: "worker_processes  1"
