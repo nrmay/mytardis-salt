@@ -56,6 +56,7 @@ static_file_storage_path: {{ static_file_storage_path }}
 #file_store_path: '/vol/mnrf/mnrfdata/dev'
 
 django_settings:
+  - "DEBUG = False"
   - "SITE_TITLE = 'myTardis'"
   - "SPONSORED_TEXT = 'Deployed using SaltStack.'"
   - "DEFAULT_INSTITUTION = 'RMIT University'"
