@@ -59,7 +59,7 @@ django_settings:
   - "SITE_TITLE = 'myTardis'"
   - "SPONSORED_TEXT = 'Deployed using SaltStack.'"
   - "DEFAULT_INSTITUTION = 'RMIT University'"
-  - "CAS_SERVER_URL = 'https://sso-cas-dev.its.rmit.edu.au/rmitcas/login'"
+  - "CAS_SERVER_URL = 'https://sso-cas-dev.its.rmit.edu.au/rmitcas/'"
   - "LANGUAGE_CODE = 'en-au'"
   - "DEEP_DATASET_STORAGE = True"
   - 'DATASET_VIEWS = [("http://www.tardis.edu.au/schemas/trdDataset/2",
