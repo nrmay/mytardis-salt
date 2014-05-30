@@ -56,14 +56,15 @@ static_file_storage_path: {{ static_file_storage_path }}
 #file_store_path: '/vol/mnrf/mnrfdata/dev'
 
 django_settings:
-  - "USE_CAS = True"
   - "DEBUG = False"
   - "SYSTEM_LOG_LEVEL = 'INFO'"
   - "MODULE_LOG_LEVEL = 'INFO'"
   - "SITE_TITLE = 'myTardis'"
   - "SPONSORED_TEXT = 'Deployed using SaltStack.'"
   - "DEFAULT_INSTITUTION = 'RMIT University'"
+  - "USE_CAS = True"
   - "CAS_SERVER_URL = 'https://sso-cas-dev.its.rmit.edu.au/rmitcas/'"
+  - "CAS_VERSION = '2'"
   - "LANGUAGE_CODE = 'en-au'"
   - "DEEP_DATASET_STORAGE = True"
   - 'DATASET_VIEWS = [("http://www.tardis.edu.au/schemas/trdDataset/2",
