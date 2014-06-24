@@ -63,9 +63,10 @@ django_settings:
   - "SPONSORED_TEXT = 'Deployed using SaltStack.'"
   - "DEFAULT_INSTITUTION = 'RMIT University'"
   - "USE_CAS = True"
-  - "CAS_SERVER_URL = 'https://sso-cas-dev.its.rmit.edu.au/rmitcas/'"
-  - "CAS_PROXY_CALLBACK = 'http://130.220.210.32/cas/login/casProxyValidate'"
-  - "CAS_VERSION = '2'"
+  - "CAS_SERVER_URL = 'https://sso-cas-ext-at.its.rmit.edu.au/rmitcas/'"
+  - "CAS_REDIRECT_URL = 'http://<ip address and port>'"
+  - "CAS_IGNORE_REFERRER = True"
+  - "CAS_LOGOUT_COMPLETELY = False"
   - "LANGUAGE_CODE = 'en-au'"
   - "DEEP_DATASET_STORAGE = True"
   - 'DATASET_VIEWS = [("http://www.tardis.edu.au/schemas/trdDataset/2",
