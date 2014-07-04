@@ -64,6 +64,7 @@ django_settings:
   - "DEFAULT_INSTITUTION = 'RMIT University'"
   - "USE_CAS = True"
   - "CAS_SERVER_URL = 'https://sso-cas-ext-at.its.rmit.edu.au/rmitcas/'"
+  - "CAS_SERVICE_URL = 'http://<set domain name>/'"
   - "CAS_IGNORE_REDIRECT = True"
   - "CAS_LOGOUT_COMPLETELY = False"
   - "LANGUAGE_CODE = 'en-au'"
