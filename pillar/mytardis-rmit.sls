@@ -67,6 +67,7 @@ django_settings:
   - "CAS_SERVICE_URL = 'http://<set domain name>/'"
   - "CAS_IGNORE_REDIRECT = True"
   - "CAS_LOGOUT_COMPLETELY = False"
+  - "LOGIN_URL = '/cas/login/'"
   - "LANGUAGE_CODE = 'en-au'"
   - "DEEP_DATASET_STORAGE = True"
   - 'DATASET_VIEWS = [("http://www.tardis.edu.au/schemas/trdDataset/2",
