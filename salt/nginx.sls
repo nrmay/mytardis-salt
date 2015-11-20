@@ -21,9 +21,9 @@ nginx:
 
 {% if grains['os_family'] == "RedHat" %}
 /etc/nginx/nginx.conf:
-  file.sed:
-    - before: "worker_processes  1"
-    - after: "worker_processes  3"
+  file.replace:
+    - pattern: "worker_processes  1"
+    - repl: "worker_processes  3"
     - backup: '.dist'
     - require:
         - pkg: nginx
@@ -80,8 +80,14 @@ service nginx reload:
 
 # open firewall
 {% if grains['os_family'] == "RedHat" %}
-lokkit -s http -s https:
-  cmd.run: []
+open_firewall:
+  cmd.run: 
+{% if grains['osrelease'] < '7.0' %}
+    - name: lokkit -s http -s https:
+{% else %}
+    - name: firewall-cmd --zone=public --add-service=http --add-service=https --permanent; firewall-cmd --reload;
+{% endif %}
+    - onlyif: service status firewalld
 {% endif %}
 
 {% if salt['pillar.get']("nginx_ssl", False) %}

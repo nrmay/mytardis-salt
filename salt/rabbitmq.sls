@@ -19,21 +19,12 @@ rabbitmq-server:
   rabbitmq_user.present:
     - password: {{ pillar['rabbitmq-pw'] }}
     - force: true
-    - permissions:
-      - '/':
-        - '.*'
-        - '.*'
-        - '.*'
-    - vhost: {{ pillar['rabbitmq-vhost'] }}
-    - runas: root
     - require:
       - file: /etc/rabbitmq/rabbitmq.config
       - service: rabbitmq-server
 
 {{ pillar['rabbitmq-vhost'] }}:
   rabbitmq_vhost.present:
-    - user: {{ pillar['rabbitmq-user'] }}
-    - runas: root
     - require:
       - rabbitmq_user: {{ pillar['rabbitmq-user'] }}
 

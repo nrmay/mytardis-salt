@@ -7,12 +7,16 @@
 mysql-server-pkgs:
   pkg.installed:
     - names: 
-      - mysql-server
 {% if grains['os_family'] == 'Debian' %}
+      - mysql-server
       - python-mysqldb
 {% else %}
-      - mysql
       - MySQL-python
+  {% if grains['os_family'] == 'RedHat' and grains['osrelease'] < '7' %}
+      - mysql-server 
+  {% else %}
+      - mariadb-server
+  {% endif %}
 {% endif %}
 
 
@@ -36,8 +40,13 @@ mysql-user:
 # check folder permissions
 # ------------------------
 {% if grains['os'] == 'RedHat' %}
-/var/run/mysqld:
+server_directory:
   file.directory:
+{% if grains['osrelease'] < '7.0' %}
+    - name: /var/run/mysqld
+{% else %}
+    - name: /var/run/mariadb
+{% endif %}
     - user: mysql
     - require:
       - user: mysql
@@ -51,13 +60,17 @@ mysql-service:
 {% if grains['os_family'] == 'Debian' %}
     - name: mysql
 {% else %}
+{% if grains['osrelease'] < '7.0' %}
     - name: mysqld
+{% else %}
+    - name: mariadb
+{% endif %}
 {% endif %}
     - require:
-      - pkg: mysql-server
+      - pkg: mysql-server-pkgs
       - user: mysql-user
 {% if grains['os'] == 'RedHat' %}
-      - file: /var/run/mysqld
+      - file: server_directory
 {% endif %}
       
       

@@ -10,8 +10,12 @@ mysql-pkgs:
 {% if grains['os_family'] == 'Debian' %}
       - python-mysqldb
 {% else %}
-      - mysql
       - MySQL-python
+  {% if grains['os_family'] == 'RedHat' and grains['osrelease'] < '7' %}
+      - mysql
+  {% else %}
+      - mariadb
+  {% endif %}
 {% endif %}
 
 

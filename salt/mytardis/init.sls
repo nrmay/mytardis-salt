@@ -38,49 +38,34 @@ mytardis-group:
     - installed
 
 set_git_email:
-  module.run:
-    - name: git.config_set
-    - cwd: {{ pillar['mytardis_base_dir'] }}
-    - setting_name: user.email
-    - setting_value: "mytardis@mytardis.org"
+  git.config_set:
+    - name: user.email
+    - value: "mytardis@mytardis.org"
     - user: {{ pillar['mytardis_user'] }}
-    - is_global: True
+    - global: True
     - require:
       - user: mytardis-user
       - file: {{ pillar['mytardis_base_dir'] }}
       - pkg: {{ pillar['git'] }}
 
 set_git_user_name:
-  module.run:
-    - name: git.config_set
-    - cwd: {{ pillar['mytardis_base_dir'] }}
-    - setting_name: user.name
-    - setting_value: "mytardis"
+  git.config_set:
+    - name: user.name
+    - value: "mytardis"
     - user: {{ pillar['mytardis_user'] }}
-    - is_global: True
+    - global: True
     - require:
-      - module: set_git_email
+      - user: mytardis-user
+      - file: {{ pillar['mytardis_base_dir'] }}
+      - pkg: {{ pillar['git'] }}
 
 git reset --hard HEAD:
   cmd.run:
     - cwd: {{ mytardis_inst_dir }}
     - user: {{ pillar['mytardis_user'] }}
-    - onlyif: ls {{ mytardis_inst_dir }}/.git
+    - onlyif: ls .git
     - require:
       - file: mytardis-git
-
-force-branch-update:
-  cmd.run:
-{% if pillar.get('mytardis_branch', 'master') != "develop" %}
-{% set other_branch = "develop" %}
-{% else %}
-{% set other_branch = "master" %}
-{% endif %}
-    - name: git checkout {{ other_branch }} && git branch -D {{ pillar.get('mytardis_branch', 'master') }} ; git fetch && git checkout -f {{ pillar.get('mytardis_branch', 'master') }}
-    - cwd: {{ mytardis_inst_dir }}
-    - user: {{ pillar['mytardis_user'] }}
-    - require:
-      - git: mytardis-git
 
 mytardis-git:
   file.directory:
@@ -95,34 +80,229 @@ mytardis-git:
     - name: "{{ pillar['mytardis_repo'] }}"
     - rev: {{ pillar.get('mytardis_branch', 'master') }}
     - target: {{ mytardis_inst_dir }}
-    - force: true
+    - force_clone: true
     - force_checkout: true
-    - always_fetch: true
     - submodules: true
     - user: {{ pillar['mytardis_user'] }}
     - require:
-      - module: set_git_user_name
+      - git: set_git_email
+      - git: set_git_user_name
       - cmd: git reset --hard HEAD
 
-# install required packages for buildout.
+force-branch-update:
+  cmd.run:
+{% if pillar.get('mytardis_branch', 'master') != "develop" %}
+{% set other_branch = "develop" %}
+{% else %}
+{% set other_branch = "master" %}
+{% endif %}
+    - name: git checkout {{ other_branch }} && git branch -D {{ pillar.get('mytardis_branch', 'master') }} ; git fetch && git checkout -f {{ pillar.get('mytardis_branch', 'master') }}
+    - cwd: {{ mytardis_inst_dir }}
+    - user: {{ pillar['mytardis_user'] }}
+    - require:
+      - git: mytardis-git
+
+{% if grains['os_family'] == "RedHat" %}
+# only available in newest salt version
+devtools:
+  module.run:
+    - name: pkg.group_install
+    - m_name: 'Development Tools'
+{% endif %}
+
+locations-fixture:
+  file.managed:
+    - name: {{ mytardis_inst_dir }}/tardis/tardis_portal/fixtures/locations.json
+    - source: salt://mytardis/templates/locations.json
+    - template: jinja
+    - context:
+        default_fs_path: {{ mytardis_inst_dir }}/var/store
+        default_st_path: {{ mytardis_inst_dir }}/var/staging
+    - user: {{ pillar['mytardis_user'] }}
+    - watch:
+        - cmd: force-branch-update
+
+# create settings.py
+settings.py:
+  file.managed:
+    - name: {{ mytardis_inst_dir }}/tardis/settings.py
+    - source: salt://mytardis/templates/settings.py
+    - template: jinja
+    - user: {{ pillar['mytardis_user'] }}
+    - require:
+        - user: mytardis-user
+        - cmd: force-branch-update
+
+# ------------------
+# install mytardis
+#
+{% if pillar.get('mytardis_buildout', True) == False %}
+# use pre-build version
+pip-pkgs:
+  pkg.latest:
+    - pkgs:
+      - python-devel
+      - python-pip
+      - python-virtualenv
+{% if grains['os_family'] == 'RedHat' %}
+      - openldap-devel
+{% endif %}
+    - require:
+      - module: devtools
+
+myvirtenv:
+  virtualenv.managed:
+    - name:  {{ mytardis_inst_dir }}
+    - cwd:   {{ mytardis_inst_dir }}
+    - user:  {{ pillar['mytardis_user'] }}
+    - system_site_packages: True
+    - require:
+      - cmd: force-branch-update
+      - pkg: pip-pkgs
+
+pip-upgrade:
+  cmd.run:
+    - name: pip install -U pip
+    - cwd:  {{ mytardis_inst_dir }}
+    - require:
+      - virtualenv: myvirtenv
+
+django-version:
+  file.replace:
+    - name:    '{{ mytardis_inst_dir }}/requirements.txt'
+    - pattern: 'Django\>=1.8,\<1.9'
+    - repl:    'Django==1.8.5'
+    - backup:  False
+    - require:
+      - virtualenv: myvirtenv
+
+requirements.txt:
+  pip.installed:
+    - user:    {{ pillar['mytardis_user'] }}
+    - bin_env: {{ mytardis_inst_dir }}
+    - cwd:     {{ mytardis_inst_dir }}
+    - requirements: '{{ mytardis_inst_dir }}/requirements.txt'
+    - upgrade:  False
+    - no_chown: True
+    - require:
+      - file: django-version
+      - cmd: pip-upgrade
+
+{% if grains['os_family'] == 'RedHat' %}
+requirements-centos.txt:
+  pip.installed:
+    - user:    {{ pillar['mytardis_user'] }}
+    - bin_env: {{ mytardis_inst_dir }}
+    - cwd:     {{ mytardis_inst_dir }}
+    - requirements: '{{ mytardis_inst_dir }}/requirements-centos.txt'
+    - upgrade:  False
+    - no_chown: True
+    - require:
+      - cmd: pip-upgrade
+{% endif %}
+
+{{ mytardis_inst_dir }}/tardis/settings.py:
+  file.replace:
+    - pattern: INSTALLED_APPS \+= \('south',\)
+    - repl:    "#INSTALLED_APPS += ('south',)"
+    - backup:  False
+    - require:
+      - file: settings.py
+
+make-migrations:
+  cmd.run:
+    - name: {{ mytardis_inst_dir }}/bin/python mytardis.py makemigrations
+    - cwd:  {{ mytardis_inst_dir }}
+    - user: {{ pillar['mytardis_user'] }}
+    - require:
+      - file: {{ mytardis_inst_dir }}/tardis/settings.py
+      - pip:  requirements.txt
+{% if grains['os_family'] == 'RedHat' %}
+      - pip:  requirements-centos.txt
+{% endif %}
+
+migrate:
+  cmd.run:
+    - name: {{ mytardis_inst_dir }}/bin/python mytardis.py migrate
+    - cwd:  {{ mytardis_inst_dir }}
+    - user: {{ pillar['mytardis_user'] }}
+    - require:
+      - cmd: make-migrations
+
+#load-fixtures:
+#  cmd.run:
+#    - name: bin/python mytardis.py loaddata locations.json
+#    - cwd: {{ mytardis_inst_dir }}
+#    - user: {{ pillar['mytardis_user'] }}
+#    - require:
+#        - cmd: migrate
+#    - watch:
+#        - file: locations-fixture
+
+#bin/python mytardis.py update_permissions:
+#  cmd.run:
+#    - cwd: {{ mytardis_inst_dir }}
+#    - user: {{ pillar['mytardis_user'] }}
+#    - watch:
+#        - cmd: migrate
+#    - require_in:
+#        - file: {{ mytardis_inst_dir }}/wsgi.py
+
+#{% if salt['pillar.get']('provide_staticfiles', False) %}
+
+#static_files_directory:
+#  file.directory:
+#    - name: "{{ salt['pillar.get']('static_file_storage_path') }}"
+#    - mode: 755
+#    - makedirs: true
+#    - user: {{ pillar['mytardis_user'] }}
+#    - require:
+#       - user: mytardis-user
+
+#bin/python mytardis.py collectstatic --noinput:
+#  cmd.run:
+#    - cwd: {{ mytardis_inst_dir }}
+#    - user: {{ pillar['mytardis_user'] }}
+#    - watch:
+#        - file: settings.py
+#        - cmd: migrate
+#    - require:
+#        - file: static_files_directory
+#{% if 'nfs-mount' in salt['pillar.get']('roles', []) and '/srv/public_data' in salt['pillar.get']('nfs-servers', []) %}
+#        - mount: '/srv/public_data'
+#{% endif %}
+#
+#{% endif %}
+
+{% else %}
+# -----------------------------------
+# install packages and run  buildout.
 requirements:
   pkg.installed:
     - names:
+      - pkg-config
+      - libgraphviz-dev
+      - libevent-dev
 {% if grains['os_family'] == "Debian" %}
       - python-dev
       - libsasl2-dev
       - libxml2-dev
       - libxslt1-dev
       - make
-{% if grains['os'] == 'Debian' and grains['osrelease'] <= '6.0.6' %}      - libmagickwand3
-{% elif grains['os'] == 'Ubuntu' and grains['osrelease'] <= '12.04' %}      - libmagickwand4
-{% else %}      - libmagickwand5{% endif %}
-{% if grains['os'] == 'Debian' and grains['osrelease'] <= '6.0.6' %}      - libpq-dev
-{% else %}      - postgresql-server-dev-all{% endif %}
-      - pkg-config
-      - libgraphviz-dev
-      - libevent-dev
-{% elif grains['os_family'] == "RedHat" %}
+{% if grains['os'] == 'Debian' and grains['osrelease'] <= '6.0.6' %}
+      - libmagickwand3
+{% elif grains['os'] == 'Ubuntu' and grains['osrelease'] <= '12.04' %}
+      - libmagickwand4
+{% else %}      
+      - libmagickwand5{
+{% endif %}
+{% if grains['os'] == 'Debian' and grains['osrelease'] <= '6.0.6' %}
+      - libpq-dev
+{% else %}      
+      - postgresql-server-dev-all
+{% endif %}
+{% endif %}
+{% if grains['os_family'] == "RedHat" %}
       - python-devel
       - libgsasl-devel
       - libxml2-devel
@@ -137,15 +317,7 @@ requirements:
 {% endif %}
 {% endif %}
 
-{% if grains['os_family'] == "RedHat" %}
-# only available in newest salt version
-devtools:
-  module.run:
-    - name: pkg.group_install
-    - m_name: 'Development Tools'
-    - require_in:
-      - cmd: buildout
-{% endif %}
+
 
 buildout-cfg:
   file.managed:
@@ -161,17 +333,6 @@ buildout-cfg:
     - watch:
         - cmd: force-branch-update
 
-# create settings.py
-settings.py:
-  file.managed:
-    - name: {{ mytardis_inst_dir }}/tardis/settings.py
-    - source: salt://mytardis/templates/settings.py
-    - template: jinja
-    - user: {{ pillar['mytardis_user'] }}
-    - require:
-        - cmd: force-branch-update
-        - user: mytardis-user
-
 # run shell script that builds mytardis with buildout and populates the db
 bootstrap:
   cmd.run:
@@ -184,29 +345,6 @@ bootstrap:
         - cmd: force-branch-update
         - pkg: requirements
         - file: {{ pillar['mytardis_base_dir'] }}
-
-locations-fixture:
-  file.managed:
-    - name: {{ mytardis_inst_dir }}/tardis/tardis_portal/fixtures/locations.json
-    - source: salt://mytardis/templates/locations.json
-    - template: jinja
-    - context:
-        default_fs_path: {{ mytardis_inst_dir }}/var/store
-        default_st_path: {{ mytardis_inst_dir }}/var/staging
-    - user: {{ pillar['mytardis_user'] }}
-    - watch:
-        - cmd: force-branch-update
-        - git: mytardis-git
-
-load-fixtures:
-  cmd.run:
-    - name: bin/django loaddata locations.json
-    - cwd: {{ mytardis_inst_dir }}
-    - user: {{ pillar['mytardis_user'] }}
-    - require:
-        - cmd: django-sync-migrate
-    - watch:
-        - file: locations-fixture
 
 django-sync-migrate:
   cmd.run:
@@ -232,15 +370,6 @@ django-sync-migrate:
         - postgres_database: {{ pillar['mytardis_db'] }}
 {% endif %}
 
-bin/django update_permissions:
-  cmd.run:
-    - cwd: {{ mytardis_inst_dir }}
-    - user: {{ pillar['mytardis_user'] }}
-    - watch:
-        - cmd: django-sync-migrate
-    - require_in:
-        - file: {{ mytardis_inst_dir }}/wsgi.py
-
 buildout:
   cmd.run:
     - name: bin/buildout -N -c buildout-salt.cfg
@@ -250,7 +379,28 @@ buildout:
         - cmd: force-branch-update
         - git: mytardis-git
         - file: buildout-cfg
-        - cmd: bootstrap
+        - cmd: bootstrapi
+        - module: devtools
+
+load-fixtures:
+  cmd.run:
+    - name: bin/django loaddata locations.json
+    - cwd: {{ mytardis_inst_dir }}
+    - user: {{ pillar['mytardis_user'] }}
+    - require:
+        - cmd: django-sync-migrate
+    - watch:
+        - file: locations-fixture
+
+
+bin/django update_permissions:
+  cmd.run:
+    - cwd: {{ mytardis_inst_dir }}
+    - user: {{ pillar['mytardis_user'] }}
+    - watch:
+        - cmd: django-sync-migrate
+    - require_in:
+        - file: {{ mytardis_inst_dir }}/wsgi.py
 
 {% if salt['pillar.get']('provide_staticfiles', False) %}
 static_files_directory:
@@ -276,13 +426,22 @@ bin/django collectstatic --noinput:
 {% endif %}
 {% endif %}
 
+{% endif %}
+
+# end of build process
+# ---------------------
+
 # load licenses
 bin/django loaddata tardis/tardis_portal/fixtures/cc_licenses.json || true:
   cmd.run:
     - cwd: {{ mytardis_inst_dir }}
     - user: {{ pillar['mytardis_user'] }}
     - require:
-        - cmd: django-sync-migrate
+{% if pillar.get('mytardis_buildout', True) == False %}
+        - cmd: migrate
+{% else %}
+        - cmd: buildout
+{% endif %}
 
 # common uwsgi configuration
 {{ mytardis_inst_dir }}/wsgi.py:
@@ -290,7 +449,11 @@ bin/django loaddata tardis/tardis_portal/fixtures/cc_licenses.json || true:
     - user: {{ pillar['mytardis_user'] }}
     - source: salt://mytardis/templates/wsgi.py
     - require:
-        - cmd: bootstrap
+{% if pillar.get('mytardis_buildout', True) == False %}
+        - cmd: migrate
+{% else %}
+        - cmd: buildout
+{% endif %}
 
 celery-supervisor:
   file.accumulated:
@@ -303,20 +466,32 @@ celery-supervisor:
     - text:
         - "[program:celeryd]\n\
 directory={{ mytardis_inst_dir }}\n\
+{% if pillar.get('mytardis_buildout', True) == False %}
+command={{ mytardis_inst_dir}}/bin/python mytardis.py celeryd --concurrency 5\n\
+{% else %}
 command={{ mytardis_inst_dir}}/bin/django celeryd --concurrency 5\n\
+{% endif %}
 user={{ pillar['mytardis_user'] }}\n\
 stdout_logfile={{ mytardis_inst_dir }}/celeryd.log\n\
 redirect_stderr=true\n\
 \n\
 [program:celerybeat]\n\
 directory={{ mytardis_inst_dir }}\n\
+{% if pillar.get('mytardis_buildout', True) == False %}
+command={{ mytardis_inst_dir}}/bin/python mytardis.py celerybeat\n\
+{% else %}
 command={{ mytardis_inst_dir}}/bin/django celerybeat\n\
+{% endif %}
 user={{ pillar['mytardis_user'] }}\n\
 stdout_logfile={{ mytardis_inst_dir }}/celerybeat.log\n\
 redirect_stderr=true\n\
 "
     - require:
+{% if pillar.get('mytardis_buildout', True) == False %}
+        - cmd: migrate
+{% else %}
         - cmd: buildout
+{% endif %}
     - require_in:
         - file: supervisord.conf
 
