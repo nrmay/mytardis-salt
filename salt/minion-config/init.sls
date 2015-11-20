@@ -36,12 +36,20 @@ new-master-key:
         - service: salt-minion
 {% endif %}
 
+/var/log/salt:
+  file.directory: []
+
+/etc/salt:
+  file.directory: []
+
 /etc/salt/minion:
   file.managed:
     - source: salt://minion-config/minion-etc
     - template: jinja
     - context:
       master_address: {{ salt['pillar.get']('salt_master_address', 'salt') }}
+    - require:
+      - file: /etc/salt
 
 /etc/init.d/salt-minion:
   file.managed:
