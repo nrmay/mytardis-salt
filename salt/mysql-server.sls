@@ -42,7 +42,7 @@ mysql-user:
 {% if grains['os'] == 'RedHat' %}
 server_directory:
   file.directory:
-{% if grains['osrelease'] < '7.0' %}
+{% if grains['osrelease'] < '7' %}
     - name: /var/run/mysqld
 {% else %}
     - name: /var/run/mariadb
@@ -60,7 +60,7 @@ mysql-service:
 {% if grains['os_family'] == 'Debian' %}
     - name: mysql
 {% else %}
-{% if grains['osrelease'] < '7.0' %}
+{% if grains['osrelease'] < '7' %}
     - name: mysqld
 {% else %}
     - name: mariadb

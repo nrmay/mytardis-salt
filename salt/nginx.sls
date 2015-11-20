@@ -82,7 +82,7 @@ service nginx reload:
 {% if grains['os_family'] == "RedHat" %}
 open_firewall:
   cmd.run: 
-{% if grains['osrelease'] < '7.0' %}
+{% if grains['osrelease'] < '7' %}
     - name: lokkit -s http -s https:
 {% else %}
     - name: firewall-cmd --zone=public --add-service=http --add-service=https --permanent; firewall-cmd --reload;
