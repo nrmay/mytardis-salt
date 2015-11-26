@@ -3,8 +3,12 @@ import os
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'tardis.settings'
 
-import django.core.handlers.wsgi
-application = django.core.handlers.wsgi.WSGIHandler()
+#import django.core.handlers.wsgi
+#application = django.core.handlers.wsgi.WSGIHandler()
+
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+
 # for in-web page debugging. Highly insecure, only use temporarily
 from django.conf import settings
 if settings.DEBUG:

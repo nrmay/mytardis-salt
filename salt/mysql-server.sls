@@ -39,10 +39,10 @@ mysql-user:
 
 # check folder permissions
 # ------------------------
-{% if grains['os'] == 'RedHat' %}
+{% if grains['os_family'] == 'RedHat' %}
 server_directory:
   file.directory:
-{% if grains['osrelease'] < '7.0' %}
+{% if grains['osrelease'] < '7' %}
     - name: /var/run/mysqld
 {% else %}
     - name: /var/run/mariadb
@@ -60,7 +60,7 @@ mysql-service:
 {% if grains['os_family'] == 'Debian' %}
     - name: mysql
 {% else %}
-{% if grains['osrelease'] < '7.0' %}
+{% if grains['osrelease'] < '7' %}
     - name: mysqld
 {% else %}
     - name: mariadb
@@ -69,7 +69,7 @@ mysql-service:
     - require:
       - pkg: mysql-server-pkgs
       - user: mysql-user
-{% if grains['os'] == 'RedHat' %}
+{% if grains['os_family'] == 'RedHat' %}
       - file: server_directory
 {% endif %}
       

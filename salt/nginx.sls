@@ -21,10 +21,17 @@ nginx:
 
 {% if grains['os_family'] == "RedHat" %}
 /etc/nginx/nginx.conf:
+{% if grains['os'] == 'CentOS' and grains['osrelease'] >= '7' %}
+  file.managed:
+    - source: salt://templates/nginx_base.conf
+    - user:   nginx
+    - group:  nginx
+{% else %}
   file.replace:
     - pattern: "worker_processes  1"
     - repl: "worker_processes  3"
     - backup: '.dist'
+{% endif %}
     - require:
         - pkg: nginx
     - require_in:
@@ -82,7 +89,7 @@ service nginx reload:
 {% if grains['os_family'] == "RedHat" %}
 open_firewall:
   cmd.run: 
-{% if grains['osrelease'] < '7.0' %}
+{% if grains['osrelease'] < '7' %}
     - name: lokkit -s http -s https:
 {% else %}
     - name: firewall-cmd --zone=public --add-service=http --add-service=https --permanent; firewall-cmd --reload;

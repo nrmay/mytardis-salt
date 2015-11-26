@@ -146,6 +146,8 @@ pip-pkgs:
       - python-virtualenv
 {% if grains['os_family'] == 'RedHat' %}
       - openldap-devel
+      - ImageMagick
+      - ImageMagick-devel
 {% endif %}
     - require:
       - module: devtools
@@ -160,12 +162,19 @@ myvirtenv:
       - cmd: force-branch-update
       - pkg: pip-pkgs
 
-pip-upgrade:
-  cmd.run:
-    - name: pip install -U pip
-    - cwd:  {{ mytardis_inst_dir }}
+myvirtenv_activate:
+  cmd.run: 
+    - name: source {{ mytardis_inst_dir }}/bin/activate
     - require:
       - virtualenv: myvirtenv
+
+pip-upgrade:
+  cmd.run:
+    - name:    {{ mytardis_inst_dir }}/bin/pip install -U pip
+    - cwd:     {{ mytardis_inst_dir }}
+    - bin_env: {{ mytardis_inst_dir }}
+    - require:
+      - cmd: myvirtenv_activate
 
 django-version:
   file.replace:
@@ -229,50 +238,72 @@ migrate:
     - require:
       - cmd: make-migrations
 
+create-cache:
+  cmd.run:
+    - name: {{ mytardis_inst_dir }}/bin/python mytardis.py createcachetable default_cache
+    - cwd:  {{ mytardis_inst_dir }}
+    - user: {{ pillar['mytardis_user'] }}
+    - require:
+      - cmd: migrate
+
 #load-fixtures:
 #  cmd.run:
-#    - name: bin/python mytardis.py loaddata locations.json
-#    - cwd: {{ mytardis_inst_dir }}
+#    - name: {{ mytardis_inst_dir }}/bin/python mytardis.py loaddata locations.json
+#    - cwd:  {{ mytardis_inst_dir }}
 #    - user: {{ pillar['mytardis_user'] }}
 #    - require:
 #        - cmd: migrate
+#        - cmd: pip-upgrade
 #    - watch:
 #        - file: locations-fixture
 
-#bin/python mytardis.py update_permissions:
+#update-permissions:
 #  cmd.run:
-#    - cwd: {{ mytardis_inst_dir }}
+#    - name: {{ mytardis_inst_dir }}/bin/python mytardis.py update_permissions
+#    - cwd:  {{ mytardis_inst_dir }}
 #    - user: {{ pillar['mytardis_user'] }}
 #    - watch:
 #        - cmd: migrate
+#        - cmd: pip-upgrade
 #    - require_in:
 #        - file: {{ mytardis_inst_dir }}/wsgi.py
 
-#{% if salt['pillar.get']('provide_staticfiles', False) %}
+{% if salt['pillar.get']('provide_staticfiles', False) %}
+static-files-directory:
+  file.directory:
+    - name: "{{ salt['pillar.get']('static_file_storage_path') }}"
+    - mode: 755
+    - makedirs: true
+    - user: {{ pillar['mytardis_user'] }}
+    - require:
+       - user: mytardis-user
 
-#static_files_directory:
-#  file.directory:
-#    - name: "{{ salt['pillar.get']('static_file_storage_path') }}"
-#    - mode: 755
-#    - makedirs: true
-#    - user: {{ pillar['mytardis_user'] }}
-#    - require:
-#       - user: mytardis-user
+collect-static:
+  cmd.run:
+    - name: {{ mytardis_inst_dir }}/bin/python mytardis.py collectstatic --noinput
+    - cwd:  {{ mytardis_inst_dir }}
+    - user: {{ pillar['mytardis_user'] }}
+    - watch:
+        - file: settings.py
+    - require:
+        - file: static-files-directory
+        - cmd: pip-upgrade
+        - cmd: create-cache
+{% if 'nfs-mount' in salt['pillar.get']('roles', []) and '/srv/public_data' in salt['pillar.get']('nfs-servers', []) %}
+        - mount: '/srv/public_data'
+{% endif %}
 
-#bin/python mytardis.py collectstatic --noinput:
-#  cmd.run:
-#    - cwd: {{ mytardis_inst_dir }}
-#    - user: {{ pillar['mytardis_user'] }}
-#    - watch:
-#        - file: settings.py
-#        - cmd: migrate
-#    - require:
-#        - file: static_files_directory
-#{% if 'nfs-mount' in salt['pillar.get']('roles', []) and '/srv/public_data' in salt['pillar.get']('nfs-servers', []) %}
-#        - mount: '/srv/public_data'
-#{% endif %}
-#
-#{% endif %}
+{% endif %}
+
+# load licenses
+load-licenses:
+  cmd.run:
+    - name: {{ mytardis_inst_dir }}/bin/python mytardis.py loaddata tardis/tardis_portal/fixtures/cc_licenses.json || true
+    - cwd:  {{ mytardis_inst_dir }}
+    - user: {{ pillar['mytardis_user'] }}
+    - require:
+        - cmd: migrate
+        - cmd: pip-upgrade
 
 {% else %}
 # -----------------------------------
@@ -316,8 +347,6 @@ requirements:
       - libevent-devel
 {% endif %}
 {% endif %}
-
-
 
 buildout-cfg:
   file.managed:
@@ -426,22 +455,19 @@ bin/django collectstatic --noinput:
 {% endif %}
 {% endif %}
 
-{% endif %}
-
-# end of build process
-# ---------------------
-
 # load licenses
 bin/django loaddata tardis/tardis_portal/fixtures/cc_licenses.json || true:
   cmd.run:
     - cwd: {{ mytardis_inst_dir }}
     - user: {{ pillar['mytardis_user'] }}
     - require:
-{% if pillar.get('mytardis_buildout', True) == False %}
-        - cmd: migrate
-{% else %}
         - cmd: buildout
+
 {% endif %}
+
+# end of build process
+# ---------------------
+
 
 # common uwsgi configuration
 {{ mytardis_inst_dir }}/wsgi.py:

@@ -14,6 +14,10 @@ base:
     - mytardis.gunicorn
     - mytardis.supervisor
     
+  'roles:mydata':
+    - match: pillar
+    - mydata
+    
   'roles:mysql-server':
     - match: pillar
     - mysql-server

@@ -3,6 +3,7 @@ roles:
   - mysql-server
   - mysql-client
   - mytardis
+  - mydata
   - rabbitmq
 
 {% set static_file_storage_path = '/opt/mytardis/static' %}
@@ -22,8 +23,12 @@ nginx_upstream_servers:
     parameters: ""
 
 mytardis_repo: "https://github.com/nrmay/mytardis.git"
-mytardis_branch: "develop"
+mytardis_branch: ""
 mytardis_base_dir: "/opt/mytardis"
+mytardis_buildout: False
+
+mydata_repo: "https://github.com/nrmay/mytardis-app-mydata.git"
+mydata_branch: "master"
 
 mytardis_user: 'mytardis'
 mytardis_group: 'mytardis'
@@ -56,15 +61,15 @@ static_file_storage_path: {{ static_file_storage_path }}
 #file_store_path: '/vol/mnrf/mnrfdata/dev'
 
 django_settings:
-  - "DEBUG = False"
-  - "SYSTEM_LOG_LEVEL = 'INFO'"
-  - "MODULE_LOG_LEVEL = 'INFO'"
-  - "SITE_TITLE = 'myTardis'"
+  - "DEBUG = True"
+  - "SYSTEM_LOG_LEVEL = 'DEBUG'"
+  - "MODULE_LOG_LEVEL = 'DEBUG'"
+  - "SITE_TITLE = 'MyTardis'"
   - "SPONSORED_TEXT = 'Deployed using SaltStack.'"
   - "DEFAULT_INSTITUTION = 'RMIT University'"
   - "USE_CAS = True"
   - "CAS_SERVER_URL = 'https://sso-cas-ext-at.its.rmit.edu.au/rmitcas/'"
-  - "CAS_SERVICE_URL = 'http://<set domain name>/'"
+  - "CAS_SERVICE_URL = 'http://<set to host address>/'"
   - "CAS_IGNORE_REDIRECT = True"
   - "CAS_LOGOUT_COMPLETELY = False"
   - "LOGIN_URL = '/cas/login/'"
