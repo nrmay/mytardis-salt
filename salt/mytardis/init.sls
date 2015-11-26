@@ -232,10 +232,10 @@ make-migrations:
       - pip:  requirements-centos.txt
 {% endif %}
 {% if 'mysql-client' in pillar['roles'] %}
-      - pip: mysql-pkgs
+      - sls: mytardis.mysql-client
 {% endif %}
 {% if 'mysql-server' in pillar['roles'] %}
-      - pip: mysql-server-pkgs
+      - sls: mysql-server
 {% endif %}
 
 migrate:
