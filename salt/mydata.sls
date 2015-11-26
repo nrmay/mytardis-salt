@@ -55,6 +55,12 @@ mydata-migrations:
     - user: {{ pillar['mytardis_user'] }}
     - require:
       - file: mydata-settings
+{% if 'mysql-client' in pillar['roles'] %}
+      - pip: mysql-pkgs
+{% endif %}
+{% if 'mysql-server' in pillar['roles'] %}
+      - pip: mysql-server-pkgs
+{% endif %}
 
 mydata-schema:
   cmd.run:

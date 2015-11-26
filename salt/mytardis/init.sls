@@ -137,7 +137,7 @@ settings.py:
 # install mytardis
 #
 {% if pillar.get('mytardis_buildout', True) == False %}
-# use pre-build version
+# use pre-built version
 pip-pkgs:
   pkg.latest:
     - pkgs:
@@ -230,6 +230,12 @@ make-migrations:
       - pip:  requirements.txt
 {% if grains['os_family'] == 'RedHat' %}
       - pip:  requirements-centos.txt
+{% endif %}
+{% if 'mysql-client' in pillar['roles'] %}
+      - pip: mysql-pkgs
+{% endif %}
+{% if 'mysql-server' in pillar['roles'] %}
+      - pip: mysql-server-pkgs
 {% endif %}
 
 migrate:
