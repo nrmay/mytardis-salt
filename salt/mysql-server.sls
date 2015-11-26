@@ -12,10 +12,12 @@ mysql-server-pkgs:
       - python-mysqldb
 {% else %}
       - MySQL-python
-  {% if grains['os_family'] == 'RedHat' and grains['osrelease'] < '7' %}
-      - mysql-server 
-  {% else %}
+  {% if grains['os'] == 'CentOS' and grains['osrelease'] >= '7' %}
+      - mariadb
       - mariadb-server
+  {% else %}
+      - mysql
+      - mysql-server 
   {% endif %}
 {% endif %}
 

@@ -58,7 +58,7 @@ gunicorn-supervisor:
     - text:
         - "\n\
 [program:gunicorn]\n\
-{% if grains['os'] == 'CentOS' and grains['osrelease'] >= '7' %}command=/usr/bin/gunicorn\n{% else %}command={{ mytardis_inst_dir}}/bin/gunicorn\n{% endif %}
+command={{ mytardis_inst_dir}}/bin/gunicorn\n
  -c {{mytardis_inst_dir}}/gunicorn_settings.py\n
  -u {{ pillar['mytardis_user'] }} -g {{ nginx_group }}\n
  -b unix:{{ socketdir }}/socket\n

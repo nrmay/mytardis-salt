@@ -146,6 +146,8 @@ pip-pkgs:
       - python-virtualenv
 {% if grains['os_family'] == 'RedHat' %}
       - openldap-devel
+      - libxml2-devel
+      - libxslt-devel
       - ImageMagick
       - ImageMagick-devel
 {% endif %}
