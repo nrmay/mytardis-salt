@@ -67,7 +67,7 @@ django_settings:
   - "SITE_TITLE = 'MyTardis'"
   - "SPONSORED_TEXT = 'Deployed using SaltStack.'"
   - "DEFAULT_INSTITUTION = 'RMIT University'"
-  - "USE_CAS = True"
+  - "CAS_ENABLED = True"
   - "CAS_SERVER_URL = 'https://sso-cas-ext-at.its.rmit.edu.au/rmitcas/'"
   - "CAS_SERVICE_URL = 'http://<set to host address>/'"
   - "CAS_IGNORE_REDIRECT = True"
