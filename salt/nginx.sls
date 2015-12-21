@@ -100,28 +100,34 @@ open_firewall:
 {% if salt['pillar.get']("nginx_ssl", False) %}
 {% set ssldir = salt['pillar.get']('nginx_ssl_dir', "/etc/ssl") %}
 {% set servername = salt['pillar.get']('nginx_server_name') %}
+{% set osarch = grains['osarch'] %]
+
 ssldir:
   file.directory:
     - name: {{ ssldir }}
 
-ssl-cert:
-  file.managed:
-    - name: {{ ssldir }}/{{ servername }}.crt
-    - source: salt://templates/cert-chain.template
-    - template: jinja
-    - context:
-        server_cert: sslcert
-        cert_chain: sslcert_chain
-    - require:
-        - file: ssldir
+M2Crypto:
+  pip.installed:
+    - name: M2Crypto
+{% if grains['os'] == "CentOS" and grains['osrelease'] >= '7' %}
+    - env_vars: 
+        SWIG_FEATURES: "-cpperraswarn -includeall 
+          -D__{{ osarch }}__ -I/usr/include/openssl"
+{% endif %}
 
-ssl-key:
-  file.managed:
-    - name: {{ ssldir }}/{{ servername }}.key
-    - source: salt://templates/pillarfilledfile
-    - template: jinja
-    - context:
-        pillarcontent: sslkey
+{{ ssldir }}/{{ servername }}.key:
+  x509.private_key_managed:
+    - bits: 4096
+    - backup: True
     - require:
-        - file: ssldir
+      - file: ssldir
+      - pip: M2Crypto
+      
+{{ ssldir }}/{{ servername }}.crt:
+  x509.certificate_managed:
+    - signing_private_key: {{ ssldir }}/{{ servername }}.key
+    - CN: {{ servername }}
+    - require:
+      - x509: {{ ssldir }}/{{ servername }}.key
+      
 {% endif %}
