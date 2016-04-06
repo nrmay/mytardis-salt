@@ -14,8 +14,10 @@ mytardis_db:
 
 postgresql-client:
   pkg.installed:
+    - names:
+      - python-psycopg2
 {% if grains['os_family'] == "Debian" %}
-    - name: postgresql-client
+      - postgresql-client
 {% else %}
-    - name: postgresql
+      - postgresql
 {% endif %}
