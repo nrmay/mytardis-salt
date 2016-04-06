@@ -100,7 +100,7 @@ open_firewall:
 {% if salt['pillar.get']("nginx_ssl", False) %}
 {% set ssldir = salt['pillar.get']('nginx_ssl_dir', "/etc/ssl") %}
 {% set servername = salt['pillar.get']('nginx_server_name') %}
-{% set osarch = grains['osarch'] %]
+{% set osarch = grains['osarch'] %}
 
 ssldir:
   file.directory:

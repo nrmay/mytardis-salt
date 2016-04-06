@@ -150,6 +150,8 @@ pip-pkgs:
       - libxslt-devel
       - ImageMagick
       - ImageMagick-devel
+      - libffi-devel
+      - xmlsec1
 {% endif %}
     - require:
       - module: devtools

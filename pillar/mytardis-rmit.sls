@@ -5,6 +5,9 @@ roles:
   - mytardis
   - mydata
   - rabbitmq
+#  - db-server
+#  - postgresql-client  
+  
 
 {% set static_file_storage_path = '/opt/mytardis/static' %}
 {% set rabbitmq_pw = "asfdalkh42z" %}
@@ -69,7 +72,7 @@ django_settings:
   - "SPONSORED_TEXT = 'Deployed using SaltStack.'"
   - "DEFAULT_INSTITUTION = 'RMIT University'"
   - "DEFAULT_LOGIN = 'localdb'"
-  - "CAS_ENABLED = True"
+  - "CAS_ENABLED = False"
   - "CAS_SERVER_URL = 'https://sso-cas-ext-at.its.rmit.edu.au/rmitcas/'"
   - "CAS_SERVICE_URL = 'http://<url of the tardis instance>/'"
   - "CAS_LOGOUT_COMPLETELY = False"
