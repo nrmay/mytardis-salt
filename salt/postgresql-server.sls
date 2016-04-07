@@ -3,6 +3,7 @@ postgresql-server:
     - names:
     {% if grains['os_family'] == "RedHat" %}
       - postgresql-server
+      - postgresql-contrib
     {% elif grains['os_family'] == 'Debian' %}
       - postgresql
     {% endif %}
@@ -41,7 +42,11 @@ postgresql-server:
 
 {% if grains['os_family'] == "RedHat" %}
   cmd.run:
+{% if grains['osrelease'] < "7" %}
     - name: service postgresql initdb
+{% else %}
+    - name: postgresql-setup initdb
+{% endif %}
     - unless: ls /var/lib/pgsql/data/base
     - require_in:
         - service: postgresql-server

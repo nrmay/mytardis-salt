@@ -5,6 +5,7 @@ mine_functions:
   network.ip_addrs: []
   test.ping: []
 
+{% if 'mysql-client' in pillar['roles'] %}
 mysql.db:   'mysql'
 mysql.host: {{ pillar['mytardis_db_host'] }}
 mysql.port: {{ pillar['mytardis_db_port'] }}
@@ -12,3 +13,4 @@ mysql.user: {{ pillar['mysql_user'] }}
 mysql.pass: {{ pillar['mysql_pass'] }}
 mysql.unix_socket: {{ pillar['mysql_socket'] }}
 mysql.charset: 'utf8'
+{% endif %}
