@@ -239,6 +239,12 @@ make-migrations:
 {% if 'mysql-server' in pillar['roles'] %}
       - sls: mysql-server
 {% endif %}
+{% if 'postgresql-client' in pillar['roles'] %}
+      - sls: mytardis.postgresql-client
+{% endif %}
+{% if 'db-server' in pillar['roles'] %}
+      - sls: postgresql-server
+{% endif %}
 
 migrate:
   cmd.run:
