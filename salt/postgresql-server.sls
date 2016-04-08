@@ -8,15 +8,17 @@ postgresql-server:
       - postgresql
     {% endif %}
 
-{% if grains['os_family'] == 'Debian' %}
   file.managed:
+{% if grains['os_family'] == 'Debian' %}
     - name: /etc/postgresql/9.1/main/pg_hba.conf
+{% else %}
+    - name: /var/lib/pgsql/data/pg_hba.conf
+{% endif %}
     - source: salt://templates/pg_hba.conf
     - mode: 644
     - template: jinja
     - require:
         - pkg: postgresql
-{% endif %}
 
   service:
     - running

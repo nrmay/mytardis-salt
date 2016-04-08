@@ -46,6 +46,6 @@ base:
     - match: pillar
     - rabbitmq
 
-  'roles:db-server':
+  'roles:postgresql-server':
     - match: pillar
     - postgresql-server

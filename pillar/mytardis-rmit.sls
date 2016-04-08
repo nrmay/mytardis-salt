@@ -5,7 +5,7 @@ roles:
   - mytardis
   - mydata
   - rabbitmq
-#  - db-server
+#  - postgresql-server
 #  - postgresql-client  
   
 

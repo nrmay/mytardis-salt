@@ -242,7 +242,7 @@ make-migrations:
 {% if 'postgresql-client' in pillar['roles'] %}
       - sls: mytardis.postgresql-client
 {% endif %}
-{% if 'db-server' in pillar['roles'] %}
+{% if 'postgresql-server' in pillar['roles'] %}
       - sls: postgresql-server
 {% endif %}
 
