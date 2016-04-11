@@ -7,18 +7,7 @@ postgresql-server:
     {% elif grains['os_family'] == 'Debian' %}
       - postgresql
     {% endif %}
-       
-postgresql-service:
-  service:
-    - running
-    - name: postgresql
-    - require:
-        - pkg: postgresql-server
-        - file: postgresql-conf
-    - require_in:
-        - postgres_database: mytardis_db
-        - postgres_user: mytardis_db_user
-
+    
 {% if grains['os_family'] == "RedHat" %}
 postgresql-initdb:
   cmd.run:
@@ -31,6 +20,16 @@ postgresql-initdb:
     - require_in:
         - service: postgresql-service
 {% endif %}
+       
+postgresql-service:
+  service:
+    - running
+    - name: postgresql
+    - require:
+        - pkg: postgresql-server
+    - require_in:
+        - postgres_database: mytardis_db
+        - postgres_user: mytardis_db_user
 
 postgresql-conf:
   file.managed:
@@ -44,10 +43,6 @@ postgresql-conf:
     - template: jinja
     - require:
         - service: postgresql-service
-{% if grains['os_family'] == "RedHat" %}
-        - cmd: postgresql-initdb
-{% endif %}
-
 
 postgresql-restart:
   cmd.run:
