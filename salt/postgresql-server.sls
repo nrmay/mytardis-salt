@@ -8,38 +8,13 @@ postgresql-server:
       - postgresql
     {% endif %}
        
-postgresql-conf:
-  file.managed:
-{% if grains['os_family'] == 'Debian' %}
-    - name: /etc/postgresql/9.1/main/pg_hba.conf
-{% else %}
-    - name: /var/lib/pgsql/data/pg_hba.conf
-{% endif %}
-    - source: salt://templates/pg_hba.conf
-    - mode: 644
-    - template: jinja
-    - require:
-        - pkg: postgresql
-
 postgresql-service:
   service:
     - running
     - name: postgresql
     - require:
         - pkg: postgresql-server
-{% if grains['os_family'] == 'Debian' %}
-        - file: postgresql-server
-{% endif %}
-    - require_in:
-        - postgres_database: mytardis_db
-        - postgres_user: mytardis_db_user
-
-postgresql-restart:
-  cmd.run:
-    - name: service postgresql restart
-    - require:
-      - file: postgresql-server
-      - file: postgresql-conf
+        - file: postgresql-conf
     - require_in:
         - postgres_database: mytardis_db
         - postgres_user: mytardis_db_user
@@ -54,5 +29,31 @@ postgresql-initdb:
 {% endif %}
     - unless: ls /var/lib/pgsql/data/base
     - require_in:
-        - service: postgresql-server
+        - service: postgresql-service
 {% endif %}
+
+postgresql-conf:
+  file.managed:
+{% if grains['os_family'] == 'Debian' %}
+    - name: /etc/postgresql/9.1/main/pg_hba.conf
+{% else %}
+    - name: /var/lib/pgsql/data/pg_hba.conf
+{% endif %}
+    - source: salt://templates/pg_hba.conf
+    - mode: 644
+    - template: jinja
+    - require:
+        - service: postgresql-service
+{% if grains['os_family'] == "RedHat" %}
+        - cmd: postgresql-initdb:
+{% endif %}
+
+
+postgresql-restart:
+  cmd.run:
+    - name: service postgresql restart
+    - require:
+      - file: postgresql-conf
+    - require_in:
+        - postgres_database: mytardis_db
+        - postgres_user: mytardis_db_user

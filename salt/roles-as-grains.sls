@@ -3,6 +3,7 @@
 roles:
   grains:
     - present
+    - force: True
     - value:
 {% endif %}
       - {{role}}
