@@ -45,7 +45,7 @@ postgresql-restart:
         - postgres_user: mytardis_db_user
 
 {% if grains['os_family'] == "RedHat" %}
-postgresql-initdb
+postgresql-initdb:
   cmd.run:
 {% if grains['osrelease'] < "7" %}
     - name: service postgresql initdb
