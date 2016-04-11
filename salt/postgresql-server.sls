@@ -7,7 +7,8 @@ postgresql-server:
     {% elif grains['os_family'] == 'Debian' %}
       - postgresql
     {% endif %}
-
+       
+postgresql-conf:
   file.managed:
 {% if grains['os_family'] == 'Debian' %}
     - name: /etc/postgresql/9.1/main/pg_hba.conf
@@ -20,6 +21,7 @@ postgresql-server:
     - require:
         - pkg: postgresql
 
+postgresql-service:
   service:
     - running
     - name: postgresql
@@ -32,17 +34,18 @@ postgresql-server:
         - postgres_database: mytardis_db
         - postgres_user: mytardis_db_user
 
-{% if grains['os_family'] == 'Debian' %}
+postgresql-restart:
   cmd.run:
     - name: service postgresql restart
     - require:
       - file: postgresql-server
+      - file: postgresql-conf
     - require_in:
         - postgres_database: mytardis_db
         - postgres_user: mytardis_db_user
-{% endif %}
 
 {% if grains['os_family'] == "RedHat" %}
+postgresql-initdb
   cmd.run:
 {% if grains['osrelease'] < "7" %}
     - name: service postgresql initdb
