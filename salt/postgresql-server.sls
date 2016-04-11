@@ -45,7 +45,7 @@ postgresql-conf:
     - require:
         - service: postgresql-service
 {% if grains['os_family'] == "RedHat" %}
-        - cmd: postgresql-initdb:
+        - cmd: postgresql-initdb
 {% endif %}
 
 
