@@ -78,7 +78,7 @@ mysql-service:
       
 # set initial password  
 # --------------------
-{% if grains['os'] == 'RedHat' %}
+{% if grains['os_family'] == 'RedHat' %}
 mysql-root-pass:
   cmd.run:
     - name: mysqladmin -u {{ pillar['mysql_user'] }} password {{ pillar['mysql_pass'] }}
@@ -100,7 +100,7 @@ mysql-root:
 {% endif %}
     - require:
       - service: mysql-service
-{% if grains['os'] == 'RedHat' %}
+{% if grains['os_family'] == 'RedHat' %}
       - cmd: mysql-root-pass
 {% endif %}
    
