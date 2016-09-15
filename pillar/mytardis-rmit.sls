@@ -91,8 +91,6 @@ django_settings:
                        "tardis.apps.slideshow_view.views.view_full_dataset"),'
   - '                 ("http://synchrotron.org.au/mx/indexed/1",
                        "tardis.apps.slideshow_view.views.view_full_dataset"),]'
-  - "from celery.schedules import crontab"
-  - "from datetime import timedelta"
   - "CELERYBEAT_SCHEDULE = {"
   - "    'verify-files': {"
   - "        'task': 'tardis_portal.verify_files',"
@@ -133,3 +131,5 @@ rabbitmq-pw: {{ rabbitmq_pw }}
 rabbitmq-vhost: myt-celery-prod
 
 rabbitmq-ssl: false
+
+# --- end of file mytardis-rmit.sls --- #

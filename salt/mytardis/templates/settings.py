@@ -1,4 +1,7 @@
-from tardis.settings_changeme import *
+# pylint: disable=wildcard-import,unused-wildcard-import
+from datetime import timedelta
+from celery.schedules import crontab 
+from tardis.settings_changeme import * # noqa # pylint: disable=W0401,W0614
 
 DATABASES = {
     'default': {
@@ -50,9 +53,10 @@ STAGING_PATH = "{{ pillar['staging_path'] }}"
 SYNC_TEMP_PATH = "{{ pillar['sync_temp_path'] }}"
 {% endif %}
 
-
 {% if "django_settings" in pillar %}
 {% for setting in pillar['django_settings'] %}
 {{ setting }}
 {% endfor %}
 {% endif %}
+
+# --- end of settings.py --- #
