@@ -1,0 +1,39 @@
+@font-face {
+    font-family: "Museo";
+    src: url("../../static/fonts/exljbris - Museo-300.otf");
+    src: url("../../static/fonts/exljbris - Museo-500.otf");
+    src: url("../../static/fonts/exljbris - Museo-700.otf");
+}
+
+a {
+    color: #dc291e; 
+}
+
+.page-header {  
+    color: #dc291e;  
+    font-family: Museo, Verdana;
+    text-transform: capitalize;   
+}
+
+.navbar {
+    text-transform: uppercase;
+}
+ 
+.navbar .brand a { 
+    display: none; 
+}
+
+.btn-primary, 
+.btn-info, 
+#login-button {
+    color: white;
+    background-color: grey;
+    background-image: none;
+}
+
+.btn-primary:hover, 
+.btn-info:hover,
+#login-button:hover {
+    color: black;
+    background-color: grey;
+} 
