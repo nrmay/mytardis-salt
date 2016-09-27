@@ -1,3 +1,4 @@
+SITE_STYLES = """
 @font-face {
     font-family: "Museo";
     src: url("../../static/fonts/exljbris - Museo-300.otf");
@@ -37,3 +38,6 @@ a {
     color: black;
     background-color: grey;
 } 
+"""
+
+# --- end of tardis.style_settings.py ---#
