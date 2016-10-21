@@ -13,6 +13,7 @@ base:
     - mytardis
     - mytardis.gunicorn
     - mytardis.supervisor
+    - mytardis.branding
     
   'roles:mydata':
     - match: pillar
