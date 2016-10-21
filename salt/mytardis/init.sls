@@ -230,6 +230,7 @@ make-migrations:
     - require:
       - file: {{ mytardis_inst_dir }}/tardis/settings.py
       - pip:  requirements.txt
+      - file: style_settings
 {% if grains['os_family'] == 'RedHat' %}
       - pip:  requirements-centos.txt
 {% endif %}

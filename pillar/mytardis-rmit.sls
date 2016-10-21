@@ -64,13 +64,14 @@ static_file_storage_path: {{ static_file_storage_path }}
 #file_store_path: '/vol/mnrf/mnrfdata/dev'
 
 django_settings:
+  - "from tardis.style_settings import *"
   - "DEBUG = True"
   - "SYSTEM_LOG_LEVEL = 'DEBUG'"
   - "MODULE_LOG_LEVEL = 'DEBUG'"
   - "SITE_TITLE = 'MyTardis'"
   - "SITE_ID = 1"
   - "from tardis.rmit_style_settings import *"
-  - "SPONSORED_TEXT = 'Deployed using <a href="https://saltstack.com/">SaltStack</a>.'"
+  - "SPONSORED_TEXT = 'Deployed using <a href=\"https://saltstack.com/\">SaltStack</a>.'"
   - "DEFAULT_INSTITUTION = 'RMIT University'"
   - "NEW_USER_INITIAL_GROUPS = ['Users',]"
   - "LOGIN_URL = 'index'"
