@@ -1,6 +1,6 @@
 {% set mytardis_inst_dir =
         pillar['mytardis_base_dir']~"/"~pillar['mytardis_branch'] %}
-{% set socketdir = "/var/run/gunicorn/mytardis" %}
+{% set socketdir = pillar['socket_dir'] %}
 
 {% if grains['os_family'] == 'Debian' %}
 {% set nginx_group = "www-data" %}
