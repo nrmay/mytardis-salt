@@ -7,18 +7,19 @@ roles:
 
 {% set static_file_storage_path = '/opt/mytardis/static' %}
 {% set rabbitmq_pw = "asfdalkh42z" %}
+{% set nginx_ssl = False %}
+{% set socket_dir = "/var/tmp/gunicorn/mytardis" %}
+
+socket_dir: {{ socket_dir }}
 
 nginx_static_file_path: {{ static_file_storage_path }}
-
 nginx_server_name: localhost
 nginx_strict_name_checking: False
-
-{% set nginx_ssl = False %}
 nginx_ssl: {{ nginx_ssl }}
 
 # needed for master-less deployments
 nginx_upstream_servers:
-  - address: unix:/var/run/gunicorn/mytardis/socket
+  - address: unix:{{ socket_dir }}/socket
     parameters: ""
 
 mytardis_repo: "https://github.com/mytardis/mytardis.git"
