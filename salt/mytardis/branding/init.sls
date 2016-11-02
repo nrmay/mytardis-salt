@@ -1,6 +1,6 @@
 {% set mytardis_inst_dir = 
                    pillar['mytardis_base_dir']~"/"~pillar['mytardis_branch'] %}
-{% set static_inst_dir = pillar('static_file_storage_path') %}
+{% set static_inst_dir = pillar['static_file_storage_path'] %}
 
 style_settings:
   file.managed:

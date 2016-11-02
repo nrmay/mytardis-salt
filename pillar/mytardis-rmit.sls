@@ -22,7 +22,7 @@ nginx_ssl: {{ nginx_ssl }}
 
 # needed for master-less deployments
 nginx_upstream_servers:
-  - address: unix:/var/run/gunicorn/mytardis/socket
+  - address: unix:/var/lib/gunicorn/mytardis/socket
     parameters: ""
 
 mytardis_repo: "https://github.com/nrmay/mytardis.git"
@@ -70,7 +70,6 @@ django_settings:
   - "MODULE_LOG_LEVEL = 'DEBUG'"
   - "SITE_TITLE = 'MyTardis'"
   - "SITE_ID = 1"
-  - "from tardis.rmit_style_settings import *"
   - "SPONSORED_TEXT = 'Deployed using <a href=\"https://saltstack.com/\">SaltStack</a>.'"
   - "DEFAULT_INSTITUTION = 'RMIT University'"
   - "NEW_USER_INITIAL_GROUPS = ['Users',]"
