@@ -28,7 +28,7 @@ style_settings:
     - mkdirs: True
     - dir_mode: 755
     - file_mode: 644
-     - require:
+    - require:
       - user: {{ pillar['mytardis_user'] }}
       - file: {{ static_inst_dir }}  
 
