@@ -11,7 +11,7 @@ roles:
 
 {% set static_file_storage_path = '/opt/mytardis/static' %}
 {% set rabbitmq_pw = "asfdalkh42z" %}
-{% set socket_dir = "/var/tmp/gunicorn/mytardis" %}
+{% set socket_dir = "/var/run/gunicorn/mytardis" %}
 {% set nginx_ssl = False %}
 
 socket_dir: {{ socket_dir }}
@@ -120,7 +120,7 @@ django_settings:
 
 secret_key: 'ij!%7-el^^rptw$b=iol%78okl10ee7zql-()z1r6e)gbxd3gl'
 
-gunicorn_tcp_socket: false
+gunicorn_tcp_socket: True
 gunicorn_ssl: false
 
 running_services:
