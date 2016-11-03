@@ -82,6 +82,7 @@ mysql-service:
 mysql-root-pass:
   cmd.run:
     - name: mysqladmin -u {{ pillar['mysql_user'] }} password {{ pillar['mysql_pass'] }}
+    - onlyif: mysqladmin -u {{ pillar['mysql_user'] }} flush-privileges
     - require:
       - service: mysql-service
 {% endif %}
