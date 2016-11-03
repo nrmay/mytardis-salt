@@ -102,12 +102,15 @@ force-branch-update:
     - require:
       - git: mytardis-git
 
-{% if grains['os_family'] == "RedHat" %}
 # only available in newest salt version
 devtools:
   module.run:
+{% if grains['os_family'] == "RedHat" %}
     - name: pkg.group_install
     - m_name: 'Development Tools'
+{% else %}
+    - name: aptpkg.install
+    - m_name: 'build-essential'
 {% endif %}
 
 locations-fixture:
