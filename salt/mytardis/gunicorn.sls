@@ -60,17 +60,23 @@ gunicorn-supervisor:
     - text:
         - "\n\
 [program:gunicorn]\n\
-command={{ mytardis_inst_dir}}/bin/gunicorn\n
- -c {{mytardis_inst_dir}}/gunicorn_settings.py\n
- -u {{ pillar['mytardis_user'] }} -g {{ nginx_group }}\n
-{%- if pillar['gunicorn_tcp_socket'] is sameas false -%}
- -b unix:{{ socketdir }}/socket\n
+command={{ mytardis_inst_dir}}/bin/gunicorn
+\n -c {{mytardis_inst_dir}}/gunicorn_settings.py
+\n -u {{ pillar['mytardis_user'] }} -g {{ nginx_group }}
+{%- if pillar['gunicorn_tcp_socket'] -%}
+{%- for ipaddr in salt['network.ip_addrs']() -%}
+\n -b {{ ipaddr }}:8000
+{%- endfor -%}
+{%- if pillar.get('gunicorn_ssl', False) -%}
+\n --certfile {{ cert_path }}.crt
+\n --keyfile {{ cert_path }}.key
 {%- endif -%}
-{%- if pillar['gunicorn_tcp_socket'] -%}{% for ipaddr in salt['network.ip_addrs']() %} -b {{ ipaddr }}:8000\n{% endfor %}
-{%- if pillar.get('gunicorn_ssl', False) -%} --certfile {{ cert_path }}.crt\n
- --keyfile {{ cert_path }}.key\n{%- endif -%}{%- endif -%} wsgi:application\n\
-stdout_logfile=/var/log/gunicorn.log\n\
-redirect_stderr=true\n\
+{%- else -%}
+\n -b unix:{{ socketdir }}/socket
+{%- endif -%}
+\n wsgi:application\
+\n stdout_logfile=/var/log/gunicorn.log\
+\n redirect_stderr=true\
 "
     - require_in:
         - file: supervisord.conf
