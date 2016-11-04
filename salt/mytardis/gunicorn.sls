@@ -72,12 +72,12 @@ command={{ mytardis_inst_dir}}/bin/gunicorn\n
 stdout_logfile=/var/log/gunicorn.log\n\
 redirect_stderr=true\n\
 "
-{%- if pillar['gunicorn_tcp_socket'] is sameas false -%}
-    - require:
-        - file: {{ socketdir }}
-{%- endif -%}
     - require_in:
         - file: supervisord.conf
+{% if pillar['gunicorn_tcp_socket'] is sameas false %}
+    - require:
+        - file: {{ socketdir }}
+{% endif %}
 
 supervisorctl start gunicorn:
   cmd.run:
