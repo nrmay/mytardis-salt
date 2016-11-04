@@ -61,7 +61,7 @@ gunicorn-supervisor:
 command={{ mytardis_inst_dir}}/bin/gunicorn\n
  -c {{mytardis_inst_dir}}/gunicorn_settings.py\n
  -u {{ pillar['mytardis_user'] }} -g {{ nginx_group }}\n
- -b unix:{{ socketdir }}/socket\n
+{% if pillar['gunicorn_tcp_socket'] is not True %} -b unix:{{ socketdir }}/socket\n{% endif %}
 {% if pillar['gunicorn_tcp_socket'] %}{% for ipaddr in salt['network.ip_addrs']() %} -b {{ ipaddr }}:8000\n{% endfor %}
 {% if pillar.get('gunicorn_ssl', False) %} --certfile {{ cert_path }}.crt\n
  --keyfile {{ cert_path }}.key\n{% endif %}{% endif %} wsgi:application\n\

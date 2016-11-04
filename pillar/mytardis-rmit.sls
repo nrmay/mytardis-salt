@@ -9,44 +9,54 @@ roles:
 #  - postgresql-client  
   
 
+####### set connections
 {% set static_file_storage_path = '/opt/mytardis/static' %}
 {% set rabbitmq_pw = "asfdalkh42z" %}
 {% set socket_dir = "/var/run/gunicorn/mytardis" %}
 {% set nginx_ssl = False %}
-
-socket_dir: {{ socket_dir }}
+{% set gunicorn_tcp = False %}
+{% set ip_addr = '127.0.0.1' %}
 
 nginx_static_file_path: {{ static_file_storage_path }}
-nginx_server_name: localhost
+nginx_server_name: {{ ip_addr }}
 nginx_strict_name_checking: False
 nginx_ssl: {{ nginx_ssl }}
+socket_dir: {{ socket_dir }}
 
 # needed for master-less deployments
 nginx_upstream_servers:
+{% if gunicorn_tcp %}
+  - address: {{ ip_addr }}:8000
+    parameters: "fail_timeout=0"
+{% else %}
   - address: unix:{{ socket_dir }}/socket
     parameters: ""
+{% endif %}
 
-mytardis_repo: "https://github.com/nrmay/mytardis.git"
-mytardis_branch: ""
-mytardis_base_dir: "/opt/mytardis"
+####### set branch
+mytardis_branch: ''
+mytardis_repo: 'https://github.com/nrmay/mytardis.git'
+mytardis_base_dir: '/opt/mytardis'
 mytardis_buildout: False
+mytardis_user: 'mytardis'
+mytardis_group: 'mytardis'
+
+####### set password
+mytardis_db_pass: ''
+mytardis_db_user: 'mytardis'
+mytardis_db: 'mytardis'
+mytardis_db_engine: 'django.db.backends.mysql'
+mytardis_db_port: 3306
+mytardis_db_host: 'localhost'
 
 mydata_repo: "https://github.com/nrmay/mytardis-app-mydata.git"
 mydata_branch: "master"
 
-mytardis_user: 'mytardis'
-mytardis_group: 'mytardis'
-
-mytardis_db: 'mytardis'
-mytardis_db_user: 'mytardis'
-mytardis_db_engine: 'django.db.backends.mysql'
-mytardis_db_port: 3306
-mytardis_db_pass: ''
-mytardis_db_host: 'localhost'
-
-mysql_user: 'root'
+####### set password
 mysql_pass: ''
+mysql_user: 'root'
 mysql_socket: '/var/lib/mysql/mysql.sock'
+
 
 # mysql
 # engine: 'django.db.backends.mysql'
@@ -64,6 +74,8 @@ static_file_storage_path: {{ static_file_storage_path }}
 
 #file_store_path: '/vol/mnrf/mnrfdata/dev'
 
+
+####### set settings
 django_settings:
   - "from tardis.style_settings import *"
   - "DEBUG = True"
@@ -120,7 +132,7 @@ django_settings:
 
 secret_key: 'ij!%7-el^^rptw$b=iol%78okl10ee7zql-()z1r6e)gbxd3gl'
 
-gunicorn_tcp_socket: True
+gunicorn_tcp_socket: {{ gunicorn_tcp }}
 gunicorn_ssl: false
 
 running_services:
