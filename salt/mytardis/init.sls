@@ -109,7 +109,7 @@ devtools:
     - name: pkg.group_install
     - m_name: 'Development Tools'
 {% else %}
-    - name: aptpkg.install
+    - name: pkg.install
     - m_name: 'build-essential'
 {% endif %}
 
@@ -155,6 +155,8 @@ pip-pkgs:
       - ImageMagick-devel
       - libffi-devel
       - xmlsec1
+{% else %}
+      - build-essential
 {% endif %}
     - require:
       - module: devtools
