@@ -158,6 +158,8 @@ pip-pkgs:
 {% else %}
       - python-dev
       - libldap2-dev
+      - libsasl2-dev
+      - libssl-dev
       - libxml2-dev
       - libxslt-dev
       - imagemagick
