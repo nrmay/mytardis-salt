@@ -157,6 +157,7 @@ pip-pkgs:
       - libffi-devel
 {% else %}
       - python-dev
+      - libldap2-dev
       - libxml2-dev
       - libxslt-dev
       - imagemagick
