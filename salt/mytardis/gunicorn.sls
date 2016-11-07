@@ -74,9 +74,10 @@ command={{ mytardis_inst_dir}}/bin/gunicorn
 {%- else -%}
 \n -b unix:{{ socketdir }}/socket
 {%- endif -%}
-\n wsgi:application\
-\n stdout_logfile=/var/log/gunicorn.log\
-\n redirect_stderr=true\
+\n wsgi:application
+\n\n
+stdout_logfile=/var/log/gunicorn.log\n
+redirect_stderr=true\n
 "
     - require_in:
         - file: supervisord.conf
