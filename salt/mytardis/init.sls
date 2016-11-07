@@ -144,19 +144,23 @@ settings.py:
 pip-pkgs:
   pkg.latest:
     - pkgs:
-      - python-devel
       - python-pip
       - python-virtualenv
+      - xmlsec1
 {% if grains['os_family'] == 'RedHat' %}
+      - python-devel
       - openldap-devel
       - libxml2-devel
       - libxslt-devel
       - ImageMagick
       - ImageMagick-devel
       - libffi-devel
-      - xmlsec1
 {% else %}
-      - build-essential
+      - python-dev
+      - libxml2-dev
+      - libxslt-dev
+      - imagemagick
+      - libffi-dev
 {% endif %}
     - require:
       - module: devtools
