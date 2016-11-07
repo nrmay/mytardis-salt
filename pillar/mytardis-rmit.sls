@@ -13,8 +13,8 @@ roles:
 {% set static_file_storage_path = '/opt/mytardis/static' %}
 {% set rabbitmq_pw = "asfdalkh42z" %}
 {% set socket_dir = "/var/run/gunicorn/mytardis" %}
-{% set nginx_ssl = False %}
-{% set gunicorn_tcp = False %}
+{% set nginx_ssl = True %}
+{% set gunicorn_tcp = True %}
 {% set ip_addr = '127.0.0.1' %}
 
 nginx_static_file_path: {{ static_file_storage_path }}
