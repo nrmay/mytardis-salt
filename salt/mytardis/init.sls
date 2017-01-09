@@ -144,10 +144,10 @@ settings.py:
 pip-pkgs:
   pkg.latest:
     - pkgs:
-      - python2-pip
       - python-virtualenv
       - xmlsec1
 {% if grains['os_family'] == 'RedHat' %}
+      - python2-pip
       - python-devel
       - openldap-devel
       - libxml2-devel
@@ -156,6 +156,7 @@ pip-pkgs:
       - ImageMagick-devel
       - libffi-devel
 {% else %}
+      - python-pip
       - python-dev
       - libldap2-dev
       - libsasl2-dev

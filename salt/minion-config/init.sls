@@ -2,14 +2,16 @@
 salt-pip-prereqs:
   pkg.latest:
     - pkgs:
-        - python2-pip
         - swig
-{% if grains['os_family'] == 'Debian' %}
+{% if grains['os_family'] == 'RedHat' %}
+        - python2-pip
+        - python-devel
+        - openssl-devel
+{% else %}
+        - python-pip
         - python-dev
         - libssl-dev
         - g++
-{% else %}
-        - python-devel
 {% endif %}
 
 {% if grains['os_family'] != 'RedHat' %}

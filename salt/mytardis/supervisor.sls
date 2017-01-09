@@ -38,14 +38,21 @@ supervisorctl stop all:
         - file: supervisord.conf
 {% else %}
 
-python2-pip:
-  pkg.installed
+
+python-pip-pkg:
+  pkg.installed:
+    - pkgs:
+{% if grains['os_family'] == 'RedHat' %}
+      - python2-pip
+{% else %}
+      - python-pip
+{% endif %}
 
 supervisor:
   pip.installed:
     - name: "supervisor>=3.0a12"
     - require:
-        - pkg: python2-pip
+        - pkg: python-pip-pkg
 
 /etc/init.d/supervisord:
   file.managed:
