@@ -144,7 +144,7 @@ settings.py:
 pip-pkgs:
   pkg.latest:
     - pkgs:
-      - python-pip
+      - python2-pip
       - python-virtualenv
       - xmlsec1
 {% if grains['os_family'] == 'RedHat' %}

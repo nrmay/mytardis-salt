@@ -2,7 +2,7 @@
 salt-pip-prereqs:
   pkg.latest:
     - pkgs:
-        - python-pip
+        - python2-pip
         - swig
 {% if grains['os_family'] == 'Debian' %}
         - python-dev

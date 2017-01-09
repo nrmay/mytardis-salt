@@ -38,14 +38,14 @@ supervisorctl stop all:
         - file: supervisord.conf
 {% else %}
 
-python-pip:
+python2-pip:
   pkg.installed
 
 supervisor:
   pip.installed:
     - name: "supervisor>=3.0a12"
     - require:
-        - pkg: python-pip
+        - pkg: python2-pip
 
 /etc/init.d/supervisord:
   file.managed:
