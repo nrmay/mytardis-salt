@@ -133,7 +133,7 @@ M2Crypto:
     - CN: {{ servername }}
     - require:
       - x509: {{ ssldir }}/{{ servername }}.key
-  file.managed
+  file.managed:
     - user: nginx
     - require:
       - user: nginx-user
