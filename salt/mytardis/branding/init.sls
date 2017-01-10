@@ -32,7 +32,7 @@ style_settings:
       - user: {{ pillar['mytardis_user'] }}
       - file: {{ static_inst_dir }}
 
-{{ mytardis_inst_dir }}/tardis/groups.py
+{{ mytardis_inst_dir }}/tardis/groups.py:
   file.managed:
     - source: salt://mytardis/branding/groups.py
     - user: {{ pillar['mytardis_user'] }}
