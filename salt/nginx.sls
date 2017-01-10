@@ -105,11 +105,6 @@ open_firewall:
 ssldir:
   file.directory:
     - name: {{ ssldir }}
-    - user: nginx
-    - recurse:
-      - user
-    - require:
-      - user: nginx-user
 
 M2Crypto:
   pip.installed:
@@ -127,12 +122,20 @@ M2Crypto:
     - require:
       - file: ssldir
       - pip: M2Crypto
-      
+  file.managed:
+    - user: nginx
+    - require:
+      - user: nginx-user
+
 {{ ssldir }}/{{ servername }}.crt:
   x509.certificate_managed:
     - signing_private_key: {{ ssldir }}/{{ servername }}.key
     - CN: {{ servername }}
     - require:
       - x509: {{ ssldir }}/{{ servername }}.key
-      
+  file.managed
+    - user: nginx
+    - require:
+      - user: nginx-user
+
 {% endif %}
