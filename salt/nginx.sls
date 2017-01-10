@@ -105,6 +105,11 @@ open_firewall:
 ssldir:
   file.directory:
     - name: {{ ssldir }}
+    - user: nginx
+    - recurse:
+      - user
+    - require:
+      - user: nginx-user
 
 M2Crypto:
   pip.installed:
@@ -119,9 +124,7 @@ M2Crypto:
   x509.private_key_managed:
     - bits: 4096
     - backup: True
-    - user: {{ pillar['mytardis_user'] }}
     - require:
-      - user: {{ pillar['mytardis_user'] }}
       - file: ssldir
       - pip: M2Crypto
       
@@ -129,9 +132,7 @@ M2Crypto:
   x509.certificate_managed:
     - signing_private_key: {{ ssldir }}/{{ servername }}.key
     - CN: {{ servername }}
-    - user: {{ pillar['mytardis_user'] }}
     - require:
-      - user: {{ pillar['mytardis_user'] }}
       - x509: {{ ssldir }}/{{ servername }}.key
       
 {% endif %}
