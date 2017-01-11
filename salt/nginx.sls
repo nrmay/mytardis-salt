@@ -1,4 +1,3 @@
-#{% if grains['os_family'] == "RedHat" %}
 nginx-user:
   group.present:
     - name: nginx
@@ -6,7 +5,6 @@ nginx-user:
     - name: nginx
     - gid: nginx
     - system: True
-#{% endif %}
 
 nginx:
   pkg:
