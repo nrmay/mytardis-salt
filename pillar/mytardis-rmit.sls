@@ -8,85 +8,47 @@ roles:
 #  - postgresql-server
 #  - postgresql-client
 
-####### set base parameters ########
-{% set ip_addr = '' %}
-{% set mytardis_name = '' %}
+######### set base variables ########
+{% set mytardis_site = '' %}
 {% set mytardis_branch = '' %}
 {% set mysql_root_password = '' %}
 {% set mysql_mytardis_password = '' %}
-####### set base parameters ########
+{% set rabbitmq_pw = '' %}
+{% set ip_addr = '' %}
+######### set base parameters ########
 
-{% set mytardis_base_dir = '/opt/mytardis' %}
-{% set static_file_storage_path = '{{ mytardis_base_dir }}/static' %}
-{% set variable_file_storage_path = 
-                 '{{ mytardis_base_dir}}/{{ mytardis_branch}}/var' %}
-{% set rabbitmq_pw = "asfdalkh42z" %}
-{% set socket_dir = "/var/run/gunicorn/mytardis" %}
+### default variables
 {% set nginx_ssl = True %}
 {% set gunicorn_tcp = True %}
+{% set base_dir = '/opt/mytardis' %}
+{% set socket_dir = "/var/run/gunicorn/mytardis" %}
+{% set static_dir = 'static' %}
+{% set variable_dir = 'var' %}
 
-nginx_static_file_path: {{ static_file_storage_path }}
-nginx_server_name: {{ ip_addr }}
-nginx_strict_name_checking: False
-nginx_ssl: {{ nginx_ssl }}
-socket_dir: {{ socket_dir }}
-
-# needed for master-less deployments
-nginx_upstream_servers:
-{% if gunicorn_tcp %}
-  - address: {{ ip_addr }}:8000
-    parameters: "fail_timeout=0"
-{% else %}
-  - address: unix:{{ socket_dir }}/socket
-    parameters: ""
-{% endif %}
-
+### mytardis settings
 mytardis_branch: '{{ mytardis_branch }}'
 mytardis_repo: 'https://github.com/nrmay/mytardis.git'
-mytardis_base_dir: '/opt/mytardis'
+mytardis_base_dir: '{{ base_dir }}'
 mytardis_buildout: False
 mytardis_user: 'mytardis'
 mytardis_group: 'mytardis'
-
-mytardis_db_pass: '{{ mysql_mytardis_password }}'
-mytardis_db_user: 'mytardis'
-mytardis_db: 'mytardis'
-mytardis_db_engine: 'django.db.backends.mysql'
-mytardis_db_port: 3306
-mytardis_db_host: 'localhost'
-
-mydata_repo: "https://github.com/nrmay/mytardis-app-mydata.git"
-mydata_branch: "master"
-
-mysql_pass: '{{ mysql_root_password }}'
-mysql_user: 'root'
-mysql_socket: '/var/lib/mysql/mysql.sock'
-
-# mysql
-# engine: 'django.db.backends.mysql'
-# port: '3306'
-
-# postgresql
-# port: '5432'
-# engine: 'django.db.backends.postgresql_psycopg2'
 
 apps:
   - tardis.apps.slideshow_view
   - tardis.apps.deep_storage_download_mapper
 
-static_file_storage_path: {{ static_file_storage_path }}
-file_store_path: '{{ variable_file_storage_path }}/store'
-staging_path: '{{ variable_file_storage_path }}/staging'
-#sync_temp_path: '{{ variable_file_storage_path }}/sync'
-#rsync_store_path: '{{ variable_file_storage_path }}/rsync'
+static_file_storage_path: '{{ base_dir }}/{{ static_dir }}'
+file_store_path:   '{{ base_dir }}/{{ mytardis_branch }}/{{ variable_dir }}/store'
+staging_path:      '{{ base_dir }}/{{ mytardis_branch }}/{{ variable_dir }}/staging'
+#sync_temp_path:   '{{ base_dir }}/{{ mytardis_branch }}/{{ variable_dir }}/sync'
+#rsync_store_path: '{{ base_dir }}/{{ mytardis_branch }}/{{ variable_dir }}/rsync'
 
-####### set settings
 django_settings:
   - "from tardis.style_settings import *"
   - "DEBUG = True"
   - "SYSTEM_LOG_LEVEL = 'DEBUG'"
   - "MODULE_LOG_LEVEL = 'DEBUG'"
-  - "SITE_TITLE = '{{ mytardis_name }}'"
+  - "SITE_TITLE = '{{ mytardis_site }}'"
   - "SITE_ID = 1"
   - "SPONSORED_TEXT = 'Deployed using <a href=\"https://saltstack.com/\">SaltStack</a>.'"
   - "DEFAULT_INSTITUTION = 'RMIT University'"
@@ -132,24 +94,65 @@ django_settings:
   - "CELERY_RESULT_BACKEND = 'amqp'"
   - "REDIS_VERIFY_MANAGER = False"
   - "ALLOWED_HOSTS = ['*',]"
-  - "STATIC_ROOT = '{{ static_file_storage_path }}'"
+  - "STATIC_ROOT = '{{ base_dir }}/{{ static_dir }}'"
   - "REGISTRATION_OPEN = False"
 
 secret_key: 'ij!%7-el^^rptw$b=iol%78okl10ee7zql-()z1r6e)gbxd3gl'
 
+### mydata settings
+mydata_repo: "https://github.com/nrmay/mytardis-app-mydata.git"
+mydata_branch: "master"
+
+### database settings
+mytardis_db: 'mytardis'
+mytardis_db_user: 'mytardis'
+mytardis_db_pass: '{{ mysql_mytardis_password }}'
+mytardis_db_engine: 'django.db.backends.mysql'
+mytardis_db_port: 3306
+mytardis_db_host: 'localhost'
+
+mysql_user: 'root'
+mysql_pass: '{{ mysql_root_password }}'
+mysql_socket: '/var/lib/mysql/mysql.sock'
+
+# mysql 
+# engine: 'django.db.backends.mysql'
+# port: '3306'
+
+# postgresql
+# port: '5432'
+# engine: 'django.db.backends.postgresql_psycopg2'
+
+### nginx settings
+nginx_server_name: {{ ip_addr }}
+nginx_strict_name_checking: False
+nginx_ssl: {{ nginx_ssl }}
+socket_dir: {{ socket_dir }}
+provide_staticfiles: True
+nginx_static_file_path: '{{ base_dir }}/{{ static_dir }}'
+
+nginx_upstream_servers: 
+{% if gunicorn_tcp %}
+  - address: {{ ip_addr }}:8000
+    parameters: "fail_timeout=0"
+{% else %}
+  - address: unix:{{ socket_dir }}/socket
+    parameters: ""
+{% endif %}
+
+### gunicorn settings
 gunicorn_tcp_socket: {{ gunicorn_tcp }}
 gunicorn_ssl: false
 
+### celery settings
 running_services:
   celeryd: true
   celerybeat: true
 
-provide_staticfiles: True
-
-rabbitmq-user: myt-celery-produser
+### rabbitmq server settings
 rabbitmq-pw: {{ rabbitmq_pw }}
 rabbitmq-vhost: myt-celery-prod
-
+rabbitmq-user: myt-celery-produser
 rabbitmq-ssl: false
 
 # --- end of file mytardis-rmit.sls --- #
