@@ -3,8 +3,8 @@ roles:
   - mysql-server
   - mysql-client
   - mytardis
-  - mydata
   - rabbitmq
+#  - mydata
 #  - postgresql-server
 #  - postgresql-client  
   
@@ -72,8 +72,10 @@ apps:
 
 static_file_storage_path: {{ static_file_storage_path }}
 
-#file_store_path: '/vol/mnrf/mnrfdata/dev'
-
+file_store_path: '{{ mytardis_inst_dir }}/var/store'
+staging_path: '{{ mytardis_inst_dir }}/var/staging'
+#sync_temp_path: '{{ mytardis_inst_dir }}/var/sync'
+#rsync_store_path: '{{ mytardis_inst_dir }}/var/rsync'
 
 ####### set settings
 django_settings:

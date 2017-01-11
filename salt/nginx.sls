@@ -13,6 +13,8 @@ nginx:
     - installed
   service:
     - running
+    - watch:
+      - file: {{ ssldir }}/{{ servername }}.crt
 {% if grains['os_family'] == "RedHat" %}
     - require:
       - user: nginx
