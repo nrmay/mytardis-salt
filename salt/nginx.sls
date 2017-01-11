@@ -1,4 +1,4 @@
-{% if grains['os_family'] == "RedHat" %}
+#{% if grains['os_family'] == "RedHat" %}
 nginx-user:
   group.present:
     - name: nginx
@@ -6,7 +6,7 @@ nginx-user:
     - name: nginx
     - gid: nginx
     - system: True
-{% endif %}
+#{% endif %}
 
 nginx:
   pkg:
@@ -114,10 +114,8 @@ M2Crypto:
       - pip: M2Crypto
   file.managed:
     - user: nginx
-{% if grains['os_family'] == "RedHat" %}
     - require:
       - user: nginx-user
-{% endif %}
 
 {{ ssldir }}/{{ servername }}.crt:
   x509.certificate_managed:
@@ -127,10 +125,8 @@ M2Crypto:
       - x509: {{ ssldir }}/{{ servername }}.key
   file.managed:
     - user: nginx
-{% if grains['os_family'] == "RedHat" %}
     - require:
       - user: nginx-user
-{% endif %}
 
 {% endif %}
 
