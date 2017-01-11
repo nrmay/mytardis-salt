@@ -114,8 +114,10 @@ M2Crypto:
       - pip: M2Crypto
   file.managed:
     - user: nginx
+{% if grains['os_family'] == "RedHat" %}
     - require:
       - user: nginx-user
+{% endif %}
 
 {{ ssldir }}/{{ servername }}.crt:
   x509.certificate_managed:
@@ -125,8 +127,10 @@ M2Crypto:
       - x509: {{ ssldir }}/{{ servername }}.key
   file.managed:
     - user: nginx
+{% if grains['os_family'] == "RedHat" %}
     - require:
       - user: nginx-user
+{% endif %}
 
 {% endif %}
 
