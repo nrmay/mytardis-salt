@@ -10,7 +10,7 @@ roles:
   
 
 ####### set connections
-{% set static_file_storage_path = '/opt/mytardis/static' %}
+{% set static_file_storage_path = pillar['mytardis_base_dir']~"/static" %}
 {% set rabbitmq_pw = "asfdalkh42z" %}
 {% set socket_dir = "/var/run/gunicorn/mytardis" %}
 {% set nginx_ssl = True %}
@@ -72,10 +72,12 @@ apps:
 
 static_file_storage_path: {{ static_file_storage_path }}
 
-file_store_path: '{{ mytardis_inst_dir }}/var/store'
-staging_path: '{{ mytardis_inst_dir }}/var/staging'
-#sync_temp_path: '{{ mytardis_inst_dir }}/var/sync'
-#rsync_store_path: '{{ mytardis_inst_dir }}/var/rsync'
+{% set mytardis_install_dir = 
+                   pillar['mytardis_base_dir']~"/"~pillar['mytardis_branch'] %}
+file_store_path: '{{ mytardis_install_dir }}/var/store'
+staging_path: '{{ mytardis_install_dir }}/var/staging'
+#sync_temp_path: '{{ mytardis_install_dir }}/var/sync'
+#rsync_store_path: '{{ mytardis_install_dir }}/var/rsync'
 
 ####### set settings
 django_settings:

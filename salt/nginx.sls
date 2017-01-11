@@ -13,8 +13,6 @@ nginx:
     - installed
   service:
     - running
-    - watch:
-      - file: {{ ssldir }}/{{ servername }}.crt
 {% if grains['os_family'] == "RedHat" %}
     - require:
       - user: nginx
@@ -76,17 +74,6 @@ nginx:
     - require:
       - pkg: nginx
 
-service nginx reload:
-  cmd.run:
-    - watch:
-{% if grains['os_family'] == "Debian" %}
-      - file: /etc/nginx/sites-enabled/mytardis.conf
-      - file: /etc/nginx/sites-enabled/default
-{% elif grains['os_family'] == "RedHat" %}
-      - file: /etc/nginx/conf.d/mytardis.conf
-      - file: /etc/nginx/conf.d/default.conf
-{% endif %}
-
 # open firewall
 {% if grains['os_family'] == "RedHat" %}
 open_firewall:
@@ -100,6 +87,7 @@ open_firewall:
 {% endif %}
 
 {% if salt['pillar.get']("nginx_ssl", False) %}
+
 {% set ssldir = salt['pillar.get']('nginx_ssl_dir', "/etc/ssl") %}
 {% set servername = salt['pillar.get']('nginx_server_name') %}
 {% set osarch = grains['osarch'] %}
@@ -140,4 +128,19 @@ M2Crypto:
     - require:
       - user: nginx-user
 
+{% endif %}
+
+service nginx reload:
+  cmd.run:
+    - watch:
+{% if salt['pillar.get']("nginx_ssl", False) %}
+      - file: {{ ssldir }}/{{ servername }}.key
+      - file: {{ ssldir }}/{{ servername }}.crt
+{% endif %}
+{% if grains['os_family'] == "Debian" %}
+      - file: /etc/nginx/sites-enabled/mytardis.conf
+      - file: /etc/nginx/sites-enabled/default
+{% elif grains['os_family'] == "RedHat" %}
+      - file: /etc/nginx/conf.d/mytardis.conf
+      - file: /etc/nginx/conf.d/default.conf
 {% endif %}
