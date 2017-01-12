@@ -2,8 +2,9 @@
                    pillar['mytardis_base_dir']~"/"~pillar['mytardis_branch'] %}
 {% set static_inst_dir = pillar['static_file_storage_path'] %}
 
-{{ mytardis_inst_dir }}/tardis/style_settings.py:
+style_settings:
   file.managed:
+    - name: {{ mytardis_inst_dir }}/tardis/style_settings.py
     - source: salt://mytardis/branding/rmit_style_settings.py
     - user: {{ pillar['mytardis_user'] }}
     - mode: 640    
