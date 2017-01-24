@@ -144,10 +144,10 @@ settings.py:
 pip-pkgs:
   pkg.latest:
     - pkgs:
-      - python-pip
       - python-virtualenv
       - xmlsec1
 {% if grains['os_family'] == 'RedHat' %}
+      - python2-pip
       - python-devel
       - openldap-devel
       - libxml2-devel
@@ -156,6 +156,7 @@ pip-pkgs:
       - ImageMagick-devel
       - libffi-devel
 {% else %}
+      - python-pip
       - python-dev
       - libldap2-dev
       - libsasl2-dev
@@ -575,6 +576,7 @@ celerybeat:
 {{ pillar['file_store_path'] }}:
   file.directory:
     - mode: 775
+    - makedirs: True
     - user: {{ pillar['mytardis_user'] }}
     - group: {{ pillar['mytardis_group'] }}
     - require:
@@ -586,6 +588,7 @@ celerybeat:
 {{ pillar['staging_path'] }}:
   file.directory:
     - mode: 775
+    - makedirs: True
     - user: {{ pillar['mytardis_user'] }}
     - group: {{ pillar['mytardis_group'] }}
     - require:
@@ -597,6 +600,7 @@ celerybeat:
 {{ pillar['sync_temp_path'] }}:
   file.directory:
     - mode: 775
+    - makedirs: True
     - user: {{ pillar['mytardis_user'] }}
     - group: {{ pillar['mytardis_group'] }}
     - require:
@@ -608,6 +612,7 @@ celerybeat:
 {{ pillar['rsync_store_path'] }}:
   file.directory:
     - mode: 775
+    - makedirs: True
     - user: {{ pillar['mytardis_user'] }}
     - group: {{ pillar['mytardis_group'] }}
     - require:

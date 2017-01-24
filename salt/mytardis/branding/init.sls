@@ -7,30 +7,39 @@ style_settings:
     - name: {{ mytardis_inst_dir }}/tardis/style_settings.py
     - source: salt://mytardis/branding/rmit_style_settings.py
     - user: {{ pillar['mytardis_user'] }}
-    - mode: 644    
+    - mode: 640    
     - require:
       - user: {{ pillar['mytardis_user'] }}
       - file: settings.py 
-        
+
+{{ mytardis_inst_dir }}/tardis/groups.py:
+  file.managed:
+    - source: salt://mytardis/branding/groups.py
+    - user: {{ pillar['mytardis_user'] }}
+    - mkdirs: True
+    - mode: 640    
+    - require:
+      - user: {{ pillar['mytardis_user'] }}
+      - file: settings.py 
+
 {{ static_inst_dir }}/favicon.ico:
   file.managed:
     - source: salt://mytardis/branding/favicon.ico
-    - user: {{ pillar['mytardis_user'] }}
-    - mode: 644
+    - user: nginx
+    - mode: 640
     - require:
-      - user: {{ pillar['mytardis_user'] }}
+      - user: nginx
       - file: {{ static_inst_dir }}  
 
 {{ static_inst_dir }}/fonts:
   file.recurse:
     - source: salt://mytardis/branding/fonts
-    - user: {{ pillar['mytardis_user'] }}
+    - user: nginx
     - mkdirs: True
-    - dir_mode: 755
-    - file_mode: 644
+    - dir_mode: 750
+    - file_mode: 640
     - require:
-      - user: {{ pillar['mytardis_user'] }}
-      - file: {{ static_inst_dir }}  
-
+      - user: nginx
+      - file: {{ static_inst_dir }}
 
 # --- end of branding.sls --- #
