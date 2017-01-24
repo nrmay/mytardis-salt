@@ -15,6 +15,9 @@ mysql-server-pkgs:
   {% if grains['os'] == 'CentOS' and grains['osrelease'] >= '7' %}
       - mariadb
       - mariadb-server
+  {% elif grains['os'] == 'RedHat' and grains['osrelease'] >= '7' %}
+      - mariadb
+      - mariadb-server
   {% else %}
       - mysql
       - mysql-server 

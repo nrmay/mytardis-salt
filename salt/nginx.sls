@@ -21,7 +21,7 @@ nginx:
 
 {% if grains['os_family'] == "RedHat" %}
 /etc/nginx/nginx.conf:
-{% if grains['os'] == 'CentOS' and grains['osrelease'] >= '7' %}
+{% if grains['osrelease'] >= '7' %}
   file.managed:
     - source: salt://templates/nginx_base.conf
     - user:   nginx

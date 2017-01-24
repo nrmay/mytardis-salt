@@ -13,6 +13,8 @@ mysql-pkgs:
       - MySQL-python
   {% if grains['os'] == 'CentOS' and grains['osrelease'] >= '7' %}
       - mariadb
+  {% elif grains['os'] == 'RedHat' and grains['osrelease'] >= '7' %}
+      - mariadb
   {% else %}
       - mysql
   {% endif %}
