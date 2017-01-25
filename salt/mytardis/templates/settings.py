@@ -1,7 +1,7 @@
 # pylint: disable=wildcard-import,unused-wildcard-import
 from datetime import timedelta
 from celery.schedules import crontab 
-from tardis.settings_changeme import * # noqa # pylint: disable=W0401,W0614
+from settings_changeme import * # noqa # pylint: disable=W0401,W0614
 
 DATABASES = {
     'default': {

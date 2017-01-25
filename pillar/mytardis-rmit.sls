@@ -44,7 +44,7 @@ staging_path:      '{{ base_dir }}/{{ mytardis_branch }}/{{ variable_dir }}/stag
 #rsync_store_path: '{{ base_dir }}/{{ mytardis_branch }}/{{ variable_dir }}/rsync'
 
 django_settings:
-  - "from tardis.style_settings import *"
+  - "from style_settings import *"
   - "DEBUG = True"
   - "SYSTEM_LOG_LEVEL = 'DEBUG'"
   - "MODULE_LOG_LEVEL = 'DEBUG'"
