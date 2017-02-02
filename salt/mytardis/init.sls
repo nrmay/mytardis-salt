@@ -165,9 +165,6 @@ pip-pkgs:
       - libxslt-dev
       - imagemagick
       - libffi-dev
-      - pyopenssl
-      - ndg-httpsclient
-      - pyasn1
 {% endif %}
     - require:
       - module: devtools
