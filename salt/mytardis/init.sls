@@ -210,6 +210,7 @@ requirements.txt:
     - requirements: '{{ mytardis_inst_dir }}/requirements.txt'
     - upgrade:  False
     - no_chown: True
+    - no_cache_dir: True
     - require:
       - file: django-version
       - cmd: pip-upgrade
