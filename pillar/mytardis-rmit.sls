@@ -81,7 +81,7 @@ django_settings:
   - "}"
   - "djcelery.setup_loader()"
 {% if nginx_ssl %}
-  - "SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')"
+  - "SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')"
   - "SESSION_COOKIE_SECURE = True"
   - "CSRF_COOKIE_SECURE = True"
 {% endif %}
