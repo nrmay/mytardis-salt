@@ -4,7 +4,7 @@ salt-pip-prereqs:
     - pkgs:
         - swig
 {% if grains['os_family'] == 'RedHat' %}
-        - python2-pip
+        - python27-pip
         - python-devel
         - openssl-devel
 {% else %}

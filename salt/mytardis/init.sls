@@ -147,7 +147,7 @@ pip-pkgs:
       - python-virtualenv
       - xmlsec1
 {% if grains['os_family'] == 'RedHat' %}
-      - python2-pip
+      - python27-pip
       - python-devel
       - openldap-devel
       - libxml2-devel
