@@ -77,7 +77,7 @@ nginx:
 open_firewall:
   cmd.run: 
 {% if grains['osrelease'] < '7' and grains['os'] == 'CentOS' %}
-    - name: lokkit -s http -s https:
+    - name: lokkit -s http -s https
 {% else %}
     - name: firewall-cmd --zone=public --add-service=http --add-service=https --permanent; firewall-cmd --reload;
 {% endif %}
