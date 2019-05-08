@@ -41,8 +41,8 @@ python-pip-pkg:
   pkg.installed:
     - pkgs:
 {% if grains['os_family'] == 'RedHat' and grains['osrelease'] > 7 %}
-      - python27-pip
-{% else %}
+      - python2-pip
+{% else %}:
       - python-pip
 {% endif %}
 
