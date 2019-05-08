@@ -1,33 +1,25 @@
 {% set mytardis_inst_dir =
         pillar['mytardis_base_dir']~"/"~pillar['mytardis_branch'] %}
 
+
 {% if grains['os_family'] == 'Debian' %}
+
 supervisor:
   pkg.installed: []
 
 supervisord.conf:
   file.managed:
-{% if grains['os_family'] == 'Debian' %}
     - name: /etc/supervisor/supervisord.conf
-{% else %}
-    - name: /etc/supervisord.conf
-{% endif %}
     - source: salt://mytardis/templates/supervisord.conf
     - template: jinja
     - require:
         - pkg: supervisor
-
-supervisor.sock:
-  file.managed:
-    - name: /var/tmp/supervisor.sock
-    - mode: 750
 
 supervisor-service-start:
   cmd.run:
     - name: service supervisor start
     - require:
         - cmd: supervisor-service-stop
-        - file: supervisor.sock
 
 supervisor-service-stop:
   cmd.run:
@@ -42,8 +34,8 @@ supervisorctl stop all:
     - require:
         - pkg: supervisor
         - file: supervisord.conf
+        
 {% else %}
-
 
 python-pip-pkg:
   pkg.installed:
@@ -59,6 +51,11 @@ supervisor:
     - name: "supervisor>=3.0a12"
     - require:
         - pkg: python-pip-pkg
+        
+supervisor.sock:
+  file.managed:
+    - name: /var/tmp/supervisor.sock
+    - mode: 750
 
 /etc/init.d/supervisord:
   file.managed:
