@@ -60,8 +60,6 @@ django_settings:
   - "LOGIN_FRONTENDS['aaf']['enabled'] = False"
   - "LOGIN_FRONTENDS['aafe']['enabled'] = False"
   - "LOGIN_HOME_ORGANIZATION = 'rmit.edu.au'"
-  - "CAS_SERVER_URL = 'https://sso-cas-ext-at.its.rmit.edu.au/rmitcas/'"
-  - "CAS_SERVICE_URL = 'http://<url of the tardis instance>/'"
   - "RAPID_CONNECT_CONFIG['iss'] = 'https://rapid.test.aaf.edu.au'"
   - "RAPID_CONNECT_CONFIG['aud'] = 'https://<url of the tardis instance>/'"
   - "RAPID_CONNECT_CONFIG['secret'] = '<secret key>'"

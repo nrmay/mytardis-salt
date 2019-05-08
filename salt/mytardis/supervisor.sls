@@ -17,11 +17,17 @@ supervisord.conf:
     - require:
         - pkg: supervisor
 
+supervisor.sock:
+  file.managed:
+    - name: /var/tmp/supervisor.sock
+    - mode: 750
+
 supervisor-service-start:
   cmd.run:
     - name: service supervisor start
     - require:
         - cmd: supervisor-service-stop
+        - file: supervisor.sock
 
 supervisor-service-stop:
   cmd.run:
@@ -85,6 +91,7 @@ supervisor-service-start:
     - require:
         - file: /etc/supervisord.conf
         - file: {{ mytardis_inst_dir }}/wsgi.py
+        - file: supervisor.sock
         - cmd: supervisorctl stop all
         - cmd: chkconfig --add supervisord
 
