@@ -51,11 +51,6 @@ supervisor:
     - name: "supervisor>=3.0a12"
     - require:
         - pkg: python-pip-pkg
-        
-supervisor.sock:
-  file.managed:
-    - name: /var/tmp/supervisor.sock
-    - mode: 750
 
 /etc/init.d/supervisord:
   file.managed:
@@ -88,7 +83,6 @@ supervisor-service-start:
     - require:
         - file: /etc/supervisord.conf
         - file: {{ mytardis_inst_dir }}/wsgi.py
-        - file: supervisor.sock
         - cmd: supervisorctl stop all
         - cmd: chkconfig --add supervisord
 

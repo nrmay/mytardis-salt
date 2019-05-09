@@ -572,6 +572,22 @@ celerybeat:
     - require:
         - cmd: supervisor-service-start
 
+# log file permissions
+tardis.logfiles:
+  file.managed:
+    - user: {{ pillar['mytardis_user'] }}
+    - names:
+      - {{ mytardis_inst_dir }}/celerybeat.log
+      - {{ mytardis_inst_dir }}/celeryd.log
+      - {{ mytardis_inst_dir }}/request.log
+      - {{ mytardis_inst_dir }}/tardis.log
+    - require:
+{% if pillar.get('mytardis_buildout', True) == False %}
+      - cmd: migrate
+{% else %}
+      - cmd: buildout
+{% endif %}
+
 # storage paths
 {% if "file_store_path" in pillar %}
 {{ pillar['file_store_path'] }}:
