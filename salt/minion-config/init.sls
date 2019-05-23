@@ -14,19 +14,19 @@ salt-pip-prereqs:
         - g++
 {% endif %}
 
-{% if grains['os_family'] != 'RedHat' %}
-salt:
-  pip.installed:
-{% if pillar.get('salt_install_type', 'stable') == 'git' %}
-    - name: salt
-    - editable: "git+https://github.com/saltstack/salt.git@{{ pillar.get('salt_version', '0.17.4') }}#egg=salt"
-{% else %}
-    - name: salt=={{ salt['pillar.get']('salt_version', '0.17.4') }}
-{% endif %}
-    - upgrade: True
-    - require:
-        - pkg: salt-pip-prereqs
-{% endif %}
+# {% if grains['os_family'] != 'RedHat' %}
+# salt:
+#   pip.installed:
+# {% if pillar.get('salt_install_type', 'stable') == 'git' %}
+#     - name: salt
+#     - editable: "git+https://github.com/saltstack/salt.git@{{ pillar.get('salt_version', '0.17.4') }}#egg=salt"
+# {% else %}
+#     - name: salt=={{ salt['pillar.get']('salt_version', '0.17.4') }}
+# {% endif %}
+#     - upgrade: True
+#     - require:
+#         - pkg: salt-pip-prereqs
+# {% endif %}
 
 {% if salt['pillar.get']('new_salt_master', False) %}
 new-master-key:
