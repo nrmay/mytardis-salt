@@ -65,9 +65,9 @@ django_settings:
   - "RAPID_CONNECT_CONFIG['secret'] = '<secret key>'"
   - "RAPID_CONNECT_CONFIG['authnrequest_url'] = '<url provided by AAF>'" 
   - "RAPID_CONNECT_CONFIG['entityID'] = '<url of auth provider>'" 
-  - "SAML2_AUTH['METADATA_AUTO_CONF_URL'] = 'https://<url of saml2 metadata>'
-  - "SAML2_AUTH['ENTITY_ID'] = 'https://<url of the tardis instance>/saml2_auth/acs/'
-  - "SAML2_AUTH['DISABLE_SSL_CERTIFICATE_VALIDATION'] = False
+  - "SAML2_AUTH['METADATA_AUTO_CONF_URL'] = 'https://<url of saml2 metadata>'"
+  - "SAML2_AUTH['ENTITY_ID'] = 'https://<url of the tardis instance>/saml2_auth/acs/'"
+  - "SAML2_AUTH['DISABLE_SSL_CERTIFICATE_VALIDATION'] = False"
   - "LANGUAGE_CODE = 'en-au'"
   - "DEEP_DATASET_STORAGE = True"
   - 'DATASET_VIEWS = [("http://www.tardis.edu.au/schemas/trdDataset/2",
