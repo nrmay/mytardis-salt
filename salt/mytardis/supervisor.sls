@@ -31,6 +31,7 @@ supervisor-service-stop:
 
 supervisorctl stop all:
   cmd.run:
+    - name: supervisorctl-stop-all; exit 0
     - require:
         - pkg: supervisor
         - file: supervisord.conf
