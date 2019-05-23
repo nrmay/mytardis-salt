@@ -162,7 +162,7 @@ pip-pkgs:
       - libsasl2-dev
       - libssl-dev
       - libxml2-dev
-      - libxslt-dev
+      - libxslt1-dev
       - imagemagick
       - libffi-dev
 {% endif %}
