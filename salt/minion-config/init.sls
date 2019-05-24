@@ -65,5 +65,6 @@ salt-minion:
     - watch:
         - file: /etc/salt/minion
         - file: /etc/init.d/salt-minion
-        - pip: salt
+#        - pip: salt
+
 {% endif %}
