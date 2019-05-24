@@ -21,21 +21,21 @@ supervisor-service-start:
     - require:
         - cmd: supervisor-service-stop
 
+supervisorctl-stop-all:
+  cmd.run:
+    - name: supervisorctl stop all; exit 0
+    - require:
+        - pkg: supervisor
+        - file: supervisord.conf
+        
 supervisor-service-stop:
   cmd.run:
     - name: service supervisor stop
     - require:
         - file: /etc/supervisor/supervisord.conf
         - file: {{ mytardis_inst_dir }}/wsgi.py
-        - cmd: supervisorctl stop all
-
-supervisorctl stop all:
-  cmd.run:
-    - name: supervisorctl-stop-all; exit 0
-    - require:
-        - pkg: supervisor
-        - file: supervisord.conf
-        
+        - cmd: supervisorctl-stop-all
+   
 {% else %}
 
 python-pip-pkg:
@@ -84,11 +84,12 @@ supervisor-service-start:
     - require:
         - file: /etc/supervisord.conf
         - file: {{ mytardis_inst_dir }}/wsgi.py
-        - cmd: supervisorctl stop all
+        - cmd: supervisorctl-stop-all
         - cmd: chkconfig --add supervisord
 
-supervisorctl stop all:
+supervisorctl-stop-all:
   cmd.run:
+    - name: supervisorctl stop all; exit 0
     - require:
         - pip: supervisor
         - file: supervisord.conf
