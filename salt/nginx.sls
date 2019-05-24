@@ -9,12 +9,12 @@ nginx-user:
 nginx:
   pkg:
     - installed
-  service:
-    - running
-{% if grains['os_family'] == "RedHat" %}
-    - require:
-      - user: nginx
-{% endif %}
+#  service:
+#    - running
+#{% if grains['os_family'] == "RedHat" %}
+#    - require:
+#      - user: nginx
+#{% endif %}
       
 
 {% if grains['os_family'] == "RedHat" %}
