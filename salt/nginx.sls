@@ -97,6 +97,7 @@ ssldir:
 M2Crypto:
   pip.installed:
     - name: M2Crypto
+    - no_cache_dir: True
 {% if grains['os'] == "CentOS" and grains['osrelease'] >= '7' %}
     - env_vars: 
         SWIG_FEATURES: "-cpperraswarn -includeall 
